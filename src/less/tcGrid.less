@@ -1,0 +1,148 @@
+﻿.tcGridColumnWidth(@name, @width){
+    [tc-col-field="@{name}"]{ width:@width; }
+}
+
+.tcGrid_bootstrap(
+        @border:0,
+        @pagerColor: #FFF,
+        @headerColor: #FFF,
+        @rowColor: #FFF,
+        @rowColorAlternating: #FFF,
+        @rowColorHover: #FFF,  
+        @rowBorder: 1px solid #ddd,
+        @headerRowBorder: 2px solid #ddd
+){
+    .tcGrid(
+        @border: @border,
+        @pagerColor: @pagerColor,
+        @headerColor: @headerColor,
+        @rowColor: @rowColor,
+        @rowColorAlternating: @rowColorAlternating,
+        @rowColorHover: @rowColorHover,  
+        @rowBorder: @rowBorder,
+        @headerRowBorder: @headerRowBorder
+    );
+}
+
+.tcGrid(
+    @border:1px solid #ddd, 
+    @pagerColor:#ddd, 
+    @cellPadding:5px, 
+    @headerColor:#FDFDFD, 
+    @rowColor:#f5f5f5, 
+    @rowColorAlternating:#FDFDFD, 
+    @rowColorHover:#f0f0f0, 
+    @rowBorder:none, 
+    @headerRowBorder:1px solid #ddd,
+    @fontSize:inherit
+){
+    font-size: @fontSize;
+    
+    .tc-grid_table{
+        display: table;
+        margin-bottom: 0;
+        width: 100%; 
+        border-bottom: @border;
+        
+        .tc-grid_thead {            
+            display: table-header-group;
+         
+            .tc-grid_tr {
+                display: table-row;
+                background-color: @headerColor;
+
+                .tc-grid_th {               
+                    display: table-cell;
+                    font-weight: bold;
+                    vertical-align: bottom;   
+
+                    border-top: @border;
+                    border-left: @border;
+                    border-bottom: @headerRowBorder;
+                    padding: @cellPadding;
+         
+                    &::selection { background: transparent; }
+                    &::-moz-selection { background: transparent; }
+
+                    &:last-child {
+                        border-right: @border;
+                    }
+                }
+
+                .tc-grid_sort {
+                    &:after{
+                        margin-left: 5px;
+                        font-family: FontAwesome;
+                    }
+                        
+                    &.desc:after { content: "\f0d7";}
+                    &.asc:after { content: "\f0d8";}
+                }
+            }
+        }
+
+        .tc-grid_tbody {        
+            display: table-row-group;    
+
+            .tc-grid_tr{
+                display: table-row;
+                
+                &:nth-child(odd) {
+                    background-color: @rowColor;
+                }
+
+                &:nth-child(even) {
+                    background-color: @rowColorAlternating;
+                }
+
+                &[ng-click]:hover {
+                    background-color: @rowColorHover;
+                }
+
+                .tc-grid_td { 
+                    display: table-cell; 
+                    border-left: @border;                                
+                    border-top: @rowBorder;
+                    padding: @cellPadding;
+
+                    &:last-child {
+                        border-right: @border;
+                    }
+                }
+
+                &:first-child{
+                    .tc-grid_td {
+                        border-top:none;
+                    }
+                }
+            }            
+        }
+    }
+
+    .tc-grid_pager {
+        width: 100%;
+        border-bottom-left-radius: 5px;
+        border-bottom-right-radius: 5px;
+
+        background-color: @pagerColor;        
+        padding: @cellPadding;
+
+        .tc-grid_item-total {     
+            float:left;           
+        }
+
+        .tc-grid_page-nav {    
+            float: right;
+            text-align: right;        
+
+            .tc-grid_page-display {
+                padding-right: @cellPadding;
+            }
+        }
+    }
+}
+
+.tcGrid__scope {
+    .tc-grid { .tcGrid(); }
+    .tc-grid_bootstrap { .tcGrid_bootstrap(); }
+}    

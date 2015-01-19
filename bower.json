@@ -1,0 +1,31 @@
+{
+  "name": "tc-grid",
+  "version": "0.1.0",
+  "homepage": "https://github.com/ThirdCornerLLC/tc-grid",
+  "authors": [
+    "Zach Barnes <Zacharias3690@gmail.com>",
+    "Tim Jones"
+  ],
+  "description": "Declarative grid directive for AngularJs",
+  "main": [
+    "tc-grid.js",
+    "tc-grid-templates.js",
+    "tc-grid.css"
+  ],
+  "keywords": [
+    "grid",
+    "tc-grid"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "~1.2.27",
+    "fontawesome": "~4.2.0"
+  }
+}

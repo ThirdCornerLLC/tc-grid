@@ -1,0 +1,35 @@
+﻿<div class="tcGrid__scope">
+   
+    <div class="%GRIDCLASS%">
+        <div class="tc-grid_table">
+            <div class="tc-grid_thead">
+                <div class="tc-grid_tr">
+                    %HEADER%
+                </div>
+            </div>
+            <div class="tc-grid_tbody">
+                <div class="tc-grid_tr" ng-repeat="row in %DATA% %FILTER%" ng-class="%ROWCLASS%" %ROWCLICK%></div>
+            </div>
+           
+        </div>       
+        
+        <div class="tc-grid_pager" ng-show="%OPTIONS%.internal.showFooter && %OPTIONS%.internal.pageCount > 1">
+            <div class="tc-grid_item-total">
+                {{(%OPTIONS%.paging.currentPage - 1) * %OPTIONS%.paging.pageSize + 1}}
+                -
+                {{%OPTIONS%.paging.currentPage === %OPTIONS%.internal.pageCount ? %OPTIONS%.paging.totalItemCount : %OPTIONS%.paging.currentPage * %OPTIONS%.paging.pageSize}}
+                of
+                {{%OPTIONS%.paging.totalItemCount}}
+            </div>
+            <div class="tc-grid_page-nav">
+                <span class="tc-page-display">{{%OPTIONS%.paging.currentPage}} / {{%OPTIONS%.internal.pageCount}}</span>
+                <button class="btn btn-default btn-xs" ng-click="%OPTIONS%.internal.first()" ng-disabled="%OPTIONS%.paging.currentPage === 1"><i class="fa fa-fast-backward"></i></button>
+                <button class="btn btn-default btn-xs" ng-click="%OPTIONS%.internal.prev()" ng-disabled="%OPTIONS%.paging.currentPage === 1"><i class="fa fa-play fa-rotate-180"></i></button>
+                <button class="btn btn-default btn-xs" ng-click="%OPTIONS%.internal.next()" ng-disabled="%OPTIONS%.paging.currentPage === %OPTIONS%.internal.pageCount"><i class="fa fa-play "></i></button>
+                <button class="btn btn-default btn-xs" ng-click="%OPTIONS%.internal.last()" ng-disabled="%OPTIONS%.paging.currentPage === %OPTIONS%.internal.pageCount"><i class="fa fa-fast-forward"></i></button>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+
+</div>
