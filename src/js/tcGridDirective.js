@@ -1,8 +1,8 @@
 ﻿(function () {
     'use strict';
-    angular.module('tc', []);
-    angular.module('tc').directive('tcGrid', tcGrid);
-    angular.module('tc').directive('tcGridColumn', tcGridColumn);
+    angular.module('tc-grid', []);
+    angular.module('tc-grid').directive('tcGrid', tcGrid);
+    angular.module('tc-grid').directive('tcGridColumn', tcGridColumn);
 
     function tcGrid($parse, $templateCache) {
         return {
@@ -36,7 +36,7 @@
                     headerHtml += '<div class="tc-grid_th tc-grid_sort" id="' + attrs.tcGridOptions + '_' + (colField || sort) + '"' + sortFn + '>' + colName + '</div>';
                 });
 
-                var templateHtml = $templateCache.get('common/directives/tcGrid/tcGrid.html');
+                var templateHtml = $templateCache.get('tcGrid.html');
 
                 templateHtml = templateHtml.replace(/%OPTIONS%/g, attrs.tcGridOptions);
                 templateHtml = templateHtml.replace(/%HEADER%/g, headerHtml);

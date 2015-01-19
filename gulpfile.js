@@ -37,7 +37,7 @@ gulp.task('js-compile', ['clean'], function() {
 
 gulp.task('template-compile', function() {
     gulp.src(templateSrc)
-        .pipe(templateCache('tc-grid-templates.js', {module: 'tc'}))
+        .pipe(templateCache('tc-grid-templates.js', {module: 'tc-grid'}))
         .pipe(gulp.dest('dest/'));
 })
 
