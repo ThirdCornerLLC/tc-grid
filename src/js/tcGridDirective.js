@@ -11,7 +11,10 @@
                 var children = element.children();
 
                 var headerHtml = "";
-                angular.forEach(children, function (child) {
+
+                attrs.columns = [];
+
+                angular.forEach(children, function (child, index) {
                     var el = angular.element(child);
 
                     var colField = el.attr('tc-col-field');
@@ -23,14 +26,18 @@
 
                     var sortFn = '';
 
-                    if(colField || sort)
+                    if (colField || sort) {
                         sortFn = ' ng-click="' + attrs.tcGridOptions + '.internal.sort(\'' + (sort || colField) + '\'' + sortExpression + ')"';
+                        attrs.columns.push(sort || colField);
+                    }
 
                     if (ignoreClick) 
                         el.attr('ng-click', '$event.stopPropagation();');
                     
                     if (el.html() === '' && colField)
                         el.html('{{row.' + colField + '}}');
+
+                    el.attr('tc-col-id', index + 1);
 
                     headerHtml += '<div class="tc-grid_th tc-grid_sort" id="' + attrs.tcGridOptions + '_' + (colField || sort) + '"' + sortFn + '>' + colName + '</div>';
                 });
@@ -58,14 +65,6 @@
                 };
             },
             controller: function($scope, $element, $attrs) {                
-
-                // TODO: This could probably just be removed and replaced with code in the compile which already traverses the children elements
-                this.addColumn = function (col) {
-                    if (options && options.internal.columns.indexOf(col) == -1) {
-                        options.internal.columns.push(col);
-                    }
-                };
-
                 var options = $parse($attrs.tcGridOptions)($scope);
 
                 var watchInitialized = false;
@@ -95,7 +94,7 @@
                         first: first,
                         last: last,
                         sort: sort,
-                        columns: []
+                        columns: $attrs.columns
                     };
 
                     if (options.paging)
@@ -241,18 +240,11 @@
 
     function tcGridColumn() {
         return {
-            link: link,
             restrict: 'E',
             require: '^tcGrid',
             replace: true,
             transclude: true,
             template: "<div class='tc-grid_td' ng-transclude=''></div>"
         };
-
-        function link(scope, element, attrs, tcGridCtrl) {
-            if (attrs.tcColField || attrs.tcColSort) {
-                tcGridCtrl.addColumn(attrs.tcColField || attrs.tcColSort);
-            }            
-        }
     }    
 }());
