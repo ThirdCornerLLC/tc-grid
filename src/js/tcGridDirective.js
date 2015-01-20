@@ -37,7 +37,7 @@
                     if (el.html() === '' && colField)
                         el.html('{{row.' + colField + '}}');
 
-                    el.attr('tc-col-id', index + 1);
+                    el.attr('tc-col-index', index + 1);
 
                     headerHtml += '<div class="tc-grid_th tc-grid_sort" id="' + attrs.tcGridOptions + '_' + (colField || sort) + '"' + sortFn + '>' + colName + '</div>';
                 });
