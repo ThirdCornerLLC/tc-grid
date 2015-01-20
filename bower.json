@@ -26,6 +26,7 @@
   ],
   "dependencies": {
     "angular": "~1.2.27",
-    "fontawesome": "~4.2.0"
+    "fontawesome": "~4.2.0",
+    "bootstrap": "~3.3.2"
   }
 }
