@@ -1,8 +1,8 @@
 ﻿(function () {
     'use strict';
-    angular.module('tc-grid', []);
-    angular.module('tc-grid').directive('tcGrid', tcGrid);
-    angular.module('tc-grid').directive('tcGridColumn', tcGridColumn);
+    angular.module('tc-grid', [])
+        .directive('tcGrid', tcGrid)
+        .directive('tcGridColumn', tcGridColumn);
 
     function tcGrid($parse, $templateCache) {
         return {
@@ -11,7 +11,7 @@
                 var children = element.children();
 
                 var headerHtml = "";
-                _.each(children, function (child) {
+                angular.forEach(children, function (child) {
                     var el = angular.element(child);
 
                     var colField = el.attr('tc-col-field');
@@ -29,13 +29,12 @@
                     if (ignoreClick) 
                         el.attr('ng-click', '$event.stopPropagation();');
                     
-
                     if (el.html() === '' && colField)
                         el.html('{{row.' + colField + '}}');
 
                     headerHtml += '<div class="tc-grid_th tc-grid_sort" id="' + attrs.tcGridOptions + '_' + (colField || sort) + '"' + sortFn + '>' + colName + '</div>';
                 });
-
+                
                 var templateHtml = $templateCache.get('tcGrid.html');
 
                 templateHtml = templateHtml.replace(/%OPTIONS%/g, attrs.tcGridOptions);
@@ -62,13 +61,15 @@
 
                 // TODO: This could probably just be removed and replaced with code in the compile which already traverses the children elements
                 this.addColumn = function (col) {
-                    if (options && _.indexOf(options.internal.columns, col) == -1) {
+                    if (options && options.internal.columns.indexOf(col) == -1) {
                         options.internal.columns.push(col);
                     }
                 };
 
                 var options = $parse($attrs.tcGridOptions)($scope);
 
+                var watchInitialized = false;
+                
                 return init();
 
                 function init() {
@@ -105,9 +106,14 @@
                 }
 
                 function initWatch() {
-                    $scope.$watch($attrs.tcGridOptions, _.after(2, pageCountWatcher), true);
+                    $scope.$watch($attrs.tcGridOptions, pageCountWatcher, true);
 
                     function pageCountWatcher() {
+                        if(!watchInitialized) {
+                            watchInitialized = true;
+                            return;
+                        }
+                        
                         options = $parse($attrs.tcGridOptions)($scope);
 
                         if (options && options.paging)
@@ -133,7 +139,7 @@
                 function initSort() {
                     if(!options.sorting.sort) return;
 
-                    _.each(options.sorting.sort, function (sortItem) {
+                    angular.forEach(options.sorting.sort, function (sortItem) {
                         var col = sortItem.split(' ')[0];
                         var dir = sortItem.split(' ')[1] || 'asc';
 
@@ -216,7 +222,7 @@
                 }
 
                 function cleanSortClasses() {
-                    _.each(options.internal.columns, function (col) {
+                    angular.forEach(options.internal.columns, function (col) {
                         var colElement = fetchColumn(col);
                         colElement.removeClass('desc');
                         colElement.removeClass('asc');
