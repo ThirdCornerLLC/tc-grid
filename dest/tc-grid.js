@@ -193,6 +193,7 @@
                 function sortChanged() {
                     if (options.sorting.onSortChange) {
                         if (options.paging) {
+							options.paging.currentPage = 1;
                             options.sorting.onSortChange(options.paging.currentPage, options.paging.pageSize, options.sorting.sort);
                         } else {
                             options.sorting.onSortChange(null, null, options.sorting.sort);
