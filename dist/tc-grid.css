@@ -57,7 +57,6 @@
   border-top: none;
 }
 .tcGrid__scope .tc-grid .tc-style_pager {
-  width: 100%;
   border-bottom-left-radius: 5px;
   border-bottom-right-radius: 5px;
   background-color: #dddddd;
@@ -67,7 +66,8 @@
   float: left;
 }
 .tcGrid__scope .tc-grid .tc-style_pager .tc-style_page-nav {
-  float: right;
+  position: relative;
+  right: 5px;
   text-align: right;
 }
 .tcGrid__scope .tc-grid .tc-style_pager .tc-style_page-nav .tc-style_page-display {
@@ -159,7 +159,6 @@
   border-top: none;
 }
 .tcGrid__scope .tc-grid_bootstrap .tc-style_pager {
-  width: 100%;
   border-bottom-left-radius: 5px;
   border-bottom-right-radius: 5px;
   background-color: #ffffff;
@@ -169,7 +168,8 @@
   float: left;
 }
 .tcGrid__scope .tc-grid_bootstrap .tc-style_pager .tc-style_page-nav {
-  float: right;
+  position: relative;
+  right: 5px;
   text-align: right;
 }
 .tcGrid__scope .tc-grid_bootstrap .tc-style_pager .tc-style_page-nav .tc-style_page-display {
@@ -228,4 +228,30 @@
 }
 .tcGrid__scope .tc-grid_bootstrap .tc-display_table .tc-display_tbody .tc-display_tr .tc-display_td {
   display: table-cell;
+}
+.tcGrid__scope .tc-button {
+  padding: 3px 4px;
+  cursor: pointer;
+  display: inline-block;
+  border-radius: 3px;
+  border: 1px solid #ccc;
+  background-color: white;
+  box-shadow: none;
+  text-shadow: none;
+}
+.tcGrid__scope .tc-button:hover {
+  border: 1px solid #aaa;
+  background-color: #f5f5f5;
+}
+.tcGrid__scope .clearfix {
+  *zoom: 1;
+}
+.tcGrid__scope .clearfix:before,
+.tcGrid__scope .clearfix:after {
+  display: table;
+  content: "";
+  line-height: 0;
+}
+.tcGrid__scope .clearfix:after {
+  clear: both;
 }

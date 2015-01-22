@@ -1,6 +1,6 @@
 {
   "name": "tc-grid",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "homepage": "https://github.com/ThirdCornerLLC/tc-grid",
   "authors": [
     "Zach Barnes <Zacharias3690@gmail.com>",
@@ -26,7 +26,6 @@
   ],
   "dependencies": {
     "angular": "~1.2.27",
-    "fontawesome": "~4.2.0",
-    "bootstrap": "~3.3.2"
+    "fontawesome": "~4.2.0"    
   }
 }

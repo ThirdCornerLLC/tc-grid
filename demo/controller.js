@@ -35,8 +35,7 @@
 			],
 			gridOptions: {
 				paging: {
-					onPageChange: function(page, count, sort) {
-
+					onPageChange: function(page, count, sort) {						
 					}
 				},
 				sorting: {
@@ -51,6 +50,7 @@
 
 		function init() {
 			$scope.vm = vm;
+			vm.gridOptions.paging.totalItemCount = 1000;
 		}
 	}
 
