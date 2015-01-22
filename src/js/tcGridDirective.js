@@ -21,6 +21,7 @@
                     var colName = el.attr('tc-col-name') || colField || '';
                     var sort = el.attr('tc-col-sort');
                     var ignoreClick = el.attr('tc-ignore-click');
+                    var colClass = el.attr('tc-col-class');
 
                     var sortExpression = (sort) ? (',\'' + sort + '\'') : '';
 
@@ -36,26 +37,25 @@
                     
                     if (el.html() === '' && colField)
                         el.html('{{row.' + colField + '}}');
-
+                    
+                    el.addClass(colClass || 'tc-style_td');
                     el.attr('tc-col-index', index + 1);
 
-                    headerHtml += '<div class="tc-grid_th tc-grid_sort" id="' + attrs.tcGridOptions + '_' + (colField || sort) + '"' + sortFn + '>' + colName + '</div>';
+                    headerHtml += '<div class="tc-display_th tc-style_th tc-display_sort tc-style_sort" id="' + attrs.tcGridOptions + '_' + (colField || sort) + '"' + sortFn + '>' + colName + '</div>';
                 });
                 
-                var templateHtml = $templateCache.get('tcGrid.html');
-
+                var templateHtml = $templateCache.get('tcGrid.html');                
                 templateHtml = templateHtml.replace(/%OPTIONS%/g, attrs.tcGridOptions);
                 templateHtml = templateHtml.replace(/%HEADER%/g, headerHtml);
                 templateHtml = templateHtml.replace(/%DATA%/g, attrs.tcGridData);
                 templateHtml = templateHtml.replace(/%GRIDCLASS%/g, attrs.tcGridClass || 'tc-grid');                
                 templateHtml = templateHtml.replace(/%ROWCLICK%/g, attrs.tcRowClick ? 'ng-click="' + attrs.tcRowClick + '"' : "");
                 templateHtml = templateHtml.replace(/%FILTER%/g, attrs.tcGridFilter ? ' | filter: ' + attrs.tcGridFilter : "");
-                templateHtml = templateHtml.replace(/%ROWCLASS%/g, attrs.tcRowClass);
+                templateHtml = templateHtml.replace(/%ROWCLASS%/g, attrs.tcRowClass || 'tc-style_tr');
+                templateHtml = templateHtml.replace(/%CHILDREN%/g, children.parent().html());
 
                 var template = angular.element(templateHtml);
-
-                template.find('.tc-grid_tbody .tc-grid_tr').append(children);
-
+                            
                 element.html('');
                 element.append(template);
 
@@ -245,7 +245,7 @@
             require: '^tcGrid',
             replace: true,
             transclude: true,
-            template: "<div class='tc-grid_td' ng-transclude=''></div>"
+            template: "<div class='tc-display_td' ng-transclude=''></div>"
         };
     }    
 }());

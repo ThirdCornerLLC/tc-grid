@@ -1,19 +1,20 @@
 ﻿<div class="tcGrid__scope">
-   
     <div class="%GRIDCLASS%">
-        <div class="tc-grid_table">
-            <div class="tc-grid_thead">
-                <div class="tc-grid_tr">
+        <div class="tc-display_table tc-style_table">
+            <div class="tc-display_thead tc-style_thead">
+                <div class="tc-display_tr tc-style_tr">
                     %HEADER%
                 </div>
             </div>
-            <div class="tc-grid_tbody">
-                <div class="tc-grid_tr" ng-repeat="row in %DATA% %FILTER%" ng-class="%ROWCLASS%" %ROWCLICK%></div>
+            <div class="tc-display_tbody tc-style_tbody">
+                <div class="tc-display_tr %ROWCLASS%" id="tc-row-container" ng-repeat="row in %DATA% %FILTER%" %ROWCLICK%>
+                    %CHILDREN%
+                </div>
             </div>
            
         </div>       
         
-        <div class="tc-grid_pager" ng-show="%OPTIONS%.internal.showFooter && %OPTIONS%.internal.pageCount > 1">
+        <div class="tc-style_pager" ng-show="%OPTIONS%.internal.showFooter && %OPTIONS%.internal.pageCount > 1">
             <div class="tc-grid_item-total">
                 {{(%OPTIONS%.paging.currentPage - 1) * %OPTIONS%.paging.pageSize + 1}}
                 -
@@ -21,7 +22,7 @@
                 of
                 {{%OPTIONS%.paging.totalItemCount}}
             </div>
-            <div class="tc-grid_page-nav">
+            <div class="tc-style_page-nav">
                 <span class="tc-page-display">{{%OPTIONS%.paging.currentPage}} / {{%OPTIONS%.internal.pageCount}}</span>
                 <button class="btn btn-default btn-xs" ng-click="%OPTIONS%.internal.first()" ng-disabled="%OPTIONS%.paging.currentPage === 1"><i class="fa fa-fast-backward"></i></button>
                 <button class="btn btn-default btn-xs" ng-click="%OPTIONS%.internal.prev()" ng-disabled="%OPTIONS%.paging.currentPage === 1"><i class="fa fa-play fa-rotate-180"></i></button>
