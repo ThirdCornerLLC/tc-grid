@@ -251,8 +251,8 @@ gulp
 ```
 
 ##Contributers
-Zach Barnes
-Tim Jones
-Michael Breedlove
-Sean Goodpasture
+Zach Barnes<br/>
+Tim Jones<br/>
+Michael Breedlove<br/>
+Sean Goodpasture<br/>
 
