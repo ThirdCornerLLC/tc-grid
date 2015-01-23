@@ -5,7 +5,6 @@ A declarative grid for AngularJS
 
 - AngularJS
 - Font Awesome
-- Bootstrap
 
 ##Installation
 
