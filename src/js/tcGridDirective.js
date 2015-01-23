@@ -41,7 +41,7 @@
                     el.addClass(colClass || 'tc-style_td');
                     el.attr('tc-col-index', index + 1);
 
-                    headerHtml += '<div class="tc-display_th tc-style_th tc-display_sort tc-style_sort" id="' + attrs.tcGridOptions + '_' + (colField || sort) + '"' + sortFn + '>' + colName + '</div>';
+                    headerHtml += '<div class="tc-display_th tc-style_th tc-display_sort tc-style_sort" id="' + attrs.tcGridOptions + '_' + (colField || sort).replace(/\./g, '') + '"' + sortFn + '>' + colName + '</div>';
                 });
                 
                 var templateHtml = $templateCache.get('tcGrid.html');                
@@ -230,9 +230,9 @@
                 }
 
                 function fetchColumn(name) {
-                    var id = ($attrs.tcGridOptions + '_' + name).replace(/\./g, '\\.');
-                    return angular.element('#' + id);
-                }
+                    var id = $attrs.tcGridOptions + '_' + name.replace(/\./g, '');
+                    return angular.element(document.getElementById(id));
+                }            
             }
         };
 
