@@ -40,14 +40,22 @@
 				},
 				sorting: {
 					onSortChange: function(page, count, sort) {
-
+						if(!sort) return;
+						sort = sort[0];
+						var descending = (sort.indexOf('desc') > -1);
+						
+						sort = sort.replace(/\s\w*/, '');						
+						
+						var data = _(vm.data).sortBy(sort);
+																	
+						vm.data = (descending) ? data.reverse().value() : data.value();
 					}
 				}
 			}
 		};
 
 		init();
-
+		
 		function init() {
 			$scope.vm = vm;
 			vm.gridOptions.paging.totalItemCount = 1000;

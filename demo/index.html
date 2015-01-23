@@ -1,29 +1,31 @@
-<!Doctype HTML>
+<!doctype HTML>
 <html>
 	<head>
 		<title>tc-grid Rules!</title>
 
-		<link data-require="fontawesome@*" data-semver="4.1.0" rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" />
-		
+		<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" />
+		<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" />
 		<link href="../dist/tc-grid.css" rel="stylesheet"/>
 		<link href="style.css"/>
 	</head>
 	<body ng-app="MyApp">
 		<div ng-controller="MyController">
-			<div style="margin-left: 50px; width: 800px;">
+			<div class="col-md-offset-2 col-md-8">
 				<tc-grid tc-grid-data="vm.data" tc-grid-options="vm.gridOptions">
-					<tc-grid-column tc-col-name="Id">{{row.Id}}</tc-grid-column>
-					<tc-grid-column tc-col-name="Name">{{row.Name}}</tc-grid-column>
-					<tc-grid-column tc-col-name="Email">{{row.Email}}</tc-grid-column>
-					<tc-grid-column tc-col-name="Status">{{row.Status}}</tc-grid-column>
+					<tc-grid-column tc-col-field="Id"></tc-grid-column>
+					<tc-grid-column tc-col-field="Name"></tc-grid-column>
+					<tc-grid-column tc-col-field="Email"></tc-grid-column>
+					<tc-grid-column tc-col-field="Status"></tc-grid-column>
 				</tc-grid>
+				
 			</div>
 		</div>
 
 
 		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.7/angular.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.min.js"></script>
+		
 		<script src="../dist/tc-grid.js"></script>
 		<script src="../dist/tc-grid-templates.js"></script>
 		<script src="controller.js"></script>
 	</body>
-</html>
