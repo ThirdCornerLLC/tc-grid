@@ -249,10 +249,3 @@ npm install
 #run gulp to compile less and js
 gulp
 ```
-
-##Contributers
-Zach Barnes<br/>
-Tim Jones<br/>
-Michael Breedlove<br/>
-Sean Goodpasture<br/>
-
