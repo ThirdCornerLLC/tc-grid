@@ -43,11 +43,6 @@
                 .tc-display_th {               
                     display: table-cell;                    
                 }
-
-                .tc-display_sort {                    
-                    &.desc:after { content: "\f0d7";}
-                    &.asc:after { content: "\f0d8";}
-                }
             }
         }
 
@@ -109,12 +104,11 @@
 
             .tc-style_sort {
                 &:after{
-                    margin-left: 5px;
-                    font-family: FontAwesome;
+                    margin-left: 5px;                    
                 }
                     
-                &.desc:after { content: "\f0d7";}
-                &.asc:after { content: "\f0d8";}
+                &.desc:after { content: "\25BC";}
+                &.asc:after { content: "\25B2";}
             }
         }
 
