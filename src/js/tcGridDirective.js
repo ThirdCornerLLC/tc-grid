@@ -7,14 +7,14 @@
     function tcGrid($parse, $templateCache) {
         return {
             restrict: 'E',
-            compile: function (element, attrs, transclude) {
+            compile: (element, attrs, transclude) => {
                 var children = element.children();
 
                 var headerHtml = "";
 
                 attrs.columns = [];
 
-                angular.forEach(children, function (child, index) {
+                angular.forEach(children, (child, index) => {
                     var el = angular.element(child);
 
                     var colField = el.attr('tc-col-field');
@@ -60,11 +60,11 @@
                 element.append(template);
 
                 return {
-                    pre: function(scope, ele, attrs, ctrl) {},
-                    post: function(scope, element, attrs, ctrl) {}
+                    pre: (scope, ele, attrs, ctrl) => {},
+                    post: (scope, element, attrs, ctrl) => {}
                 };
             },
-            controller: function($scope, $element, $attrs) {                
+            controller: ($scope, $element, $attrs) => {                
                 var options = $parse($attrs.tcGridOptions)($scope);
 
                 var watchInitialized = false;
@@ -138,7 +138,7 @@
                 function initSort() {
                     if(!options.sorting.sort) return;
 
-                    angular.forEach(options.sorting.sort, function (sortItem) {
+                    angular.forEach(options.sorting.sort, (sortItem) => {
                         var col = sortItem.split(' ')[0];
                         var dir = sortItem.split(' ')[1] || 'asc';
 
@@ -222,7 +222,7 @@
                 }
 
                 function cleanSortClasses() {
-                    angular.forEach(options.internal.columns, function (col) {
+                    angular.forEach(options.internal.columns, col => {
                         var colElement = fetchColumn(col);
                         colElement.removeClass('desc');
                         colElement.removeClass('asc');

@@ -28,13 +28,12 @@
 }
 .tcGrid__scope .tc-grid .tc-style_table .tc-display_thead .tc-style_sort:after {
   margin-left: 5px;
-  font-family: FontAwesome;
 }
 .tcGrid__scope .tc-grid .tc-style_table .tc-display_thead .tc-style_sort.desc:after {
-  content: "\f0d7";
+  content: "\25BC";
 }
 .tcGrid__scope .tc-grid .tc-style_table .tc-display_thead .tc-style_sort.asc:after {
-  content: "\f0d8";
+  content: "\25B2";
 }
 .tcGrid__scope .tc-grid .tc-style_table .tc-display_tbody .tc-style_tr:nth-child(odd) {
   background-color: #f5f5f5;
@@ -85,12 +84,6 @@
 .tcGrid__scope .tc-grid .tc-display_table .tc-display_thead .tc-display_tr .tc-display_th {
   display: table-cell;
 }
-.tcGrid__scope .tc-grid .tc-display_table .tc-display_thead .tc-display_tr .tc-display_sort.desc:after {
-  content: "\f0d7";
-}
-.tcGrid__scope .tc-grid .tc-display_table .tc-display_thead .tc-display_tr .tc-display_sort.asc:after {
-  content: "\f0d8";
-}
 .tcGrid__scope .tc-grid .tc-display_table .tc-display_tbody {
   display: table-row-group;
 }
@@ -130,13 +123,12 @@
 }
 .tcGrid__scope .tc-grid_bootstrap .tc-style_table .tc-display_thead .tc-style_sort:after {
   margin-left: 5px;
-  font-family: FontAwesome;
 }
 .tcGrid__scope .tc-grid_bootstrap .tc-style_table .tc-display_thead .tc-style_sort.desc:after {
-  content: "\f0d7";
+  content: "\25BC";
 }
 .tcGrid__scope .tc-grid_bootstrap .tc-style_table .tc-display_thead .tc-style_sort.asc:after {
-  content: "\f0d8";
+  content: "\25B2";
 }
 .tcGrid__scope .tc-grid_bootstrap .tc-style_table .tc-display_tbody .tc-style_tr:nth-child(odd) {
   background-color: #ffffff;
@@ -187,12 +179,6 @@
 .tcGrid__scope .tc-grid_bootstrap .tc-display_table .tc-display_thead .tc-display_tr .tc-display_th {
   display: table-cell;
 }
-.tcGrid__scope .tc-grid_bootstrap .tc-display_table .tc-display_thead .tc-display_tr .tc-display_sort.desc:after {
-  content: "\f0d7";
-}
-.tcGrid__scope .tc-grid_bootstrap .tc-display_table .tc-display_thead .tc-display_tr .tc-display_sort.asc:after {
-  content: "\f0d8";
-}
 .tcGrid__scope .tc-grid_bootstrap .tc-display_table .tc-display_tbody {
   display: table-row-group;
 }
@@ -213,12 +199,6 @@
 }
 .tcGrid__scope .tc-grid_bootstrap .tc-display_table .tc-display_thead .tc-display_tr .tc-display_th {
   display: table-cell;
-}
-.tcGrid__scope .tc-grid_bootstrap .tc-display_table .tc-display_thead .tc-display_tr .tc-display_sort.desc:after {
-  content: "\f0d7";
-}
-.tcGrid__scope .tc-grid_bootstrap .tc-display_table .tc-display_thead .tc-display_tr .tc-display_sort.asc:after {
-  content: "\f0d8";
 }
 .tcGrid__scope .tc-grid_bootstrap .tc-display_table .tc-display_tbody {
   display: table-row-group;
