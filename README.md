@@ -1,10 +1,6 @@
 ##tc-grid
 A declarative grid for AngularJS
 
-##Requirements
-
-- AngularJS
-
 ##Installation
 
 ```sh
