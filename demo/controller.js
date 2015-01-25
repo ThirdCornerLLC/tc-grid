@@ -31,12 +31,12 @@
 					Email: 'Michael@Michael.com',
 					Status: 'Online'
 				}
-
 			],
 			gridOptions: {
 				paging: {
 					onPageChange: function(page, count, sort) {						
-					}
+					},
+					totalItemCount: 100
 				},
 				sorting: {
 					onSortChange: function(page, count, sort) {
@@ -58,7 +58,6 @@
 		
 		function init() {
 			$scope.vm = vm;
-			vm.gridOptions.paging.totalItemCount = 1000;
 		}
 	}
 
