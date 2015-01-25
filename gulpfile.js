@@ -5,7 +5,6 @@ var less = require('gulp-less');
 var templateCache = require('gulp-angular-templatecache');
 var to5 = require('gulp-6to5');
 var runSequence = require('run-sequence');
-var vinylPaths = require('vinyl-paths');
 
 var config = {
     src: {
