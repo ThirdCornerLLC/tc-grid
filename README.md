@@ -4,7 +4,6 @@ A declarative grid for AngularJS
 ##Requirements
 
 - AngularJS
-- Font Awesome
 
 ##Installation
 
@@ -21,10 +20,8 @@ angular.module('app', ['tc-grid']);
 ```
 
 ```html
-<!-- Include dependencies -->
 <link href="bower_components/tc-grid/dest/tc-grid.css" rel="stylesheet" type="text/css">
 <script type="text/javascript" src="bower_components/tc-grid/dest/tc-grid.js"></script>
-<script type="text/javascript" src="bower_components/tc-grid/dest/tc-grid-templates.js"></script>
 
 <!--
 	tc-grid-data: Array data source for grid
@@ -246,6 +243,6 @@ npm install gulp -g
 #install build dependencies
 npm install
 
-#run gulp to compile less and js
-gulp
+#run gulp to build less and js
+gulp build
 ```
