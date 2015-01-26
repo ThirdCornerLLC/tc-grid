@@ -60,7 +60,7 @@
           post: function (scope, element, attrs, ctrl) {}
         };
       },
-      controller: function ($scope, $element, $attrs) {
+      controller: ["$scope", "$element", "$attrs", function ($scope, $element, $attrs) {
         var init = function () {
           initOptions();
           initWatch();
@@ -215,10 +215,11 @@
         var watchInitialized = false;
 
         return init();
-      }
+      }]
     };
 
   };
+  tcGrid.$inject = ["$parse", "$templateCache"];
 
   var tcGridColumn = function () {
     return {

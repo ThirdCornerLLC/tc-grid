@@ -5,6 +5,7 @@ var less = require('gulp-less');
 var templateCache = require('gulp-angular-templatecache');
 var to5 = require('gulp-6to5');
 var runSequence = require('run-sequence');
+var ngAnnotate = require('gulp-ng-annotate');
 
 var config = {
     src: {
@@ -48,6 +49,7 @@ gulp.task('js-build', function() {
     return gulp.src(config.src.js)
         .pipe(concat(config.dist.js))
         .pipe(to5())
+        .pipe(ngAnnotate())
         .pipe(gulp.dest(config.dist.base));
 });
 
