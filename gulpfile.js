@@ -10,7 +10,6 @@ var pipe = require('multipipe');
 
 var config = {
     src: {
-        watch: "src/**/*.*",
         js: "src/js/**/*.js",
         less: "src/less/**/*.less",
         html: "src/templates/**/*.html"
