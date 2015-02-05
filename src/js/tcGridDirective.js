@@ -2,52 +2,55 @@
     'use strict';
     angular.module('tc-grid', [])
         .directive('tcGrid', tcGrid)
-        .directive('tcGridColumn', tcGridColumn);
+        .directive('tcColumn', tcGridColumn);
 
-    function tcGrid($parse, $templateCache) {
+    function tcGrid($parse, $compile, $templateCache) {
         return {
             restrict: 'E',
+            scope: {
+                options: '=?tcOptions'
+            },            
             compile: (element, attrs, transclude) => {
-                var children = element.children();
-
+                var children = element.children();                
                 var headerHtml = "";
 
                 attrs.columns = [];
 
                 angular.forEach(children, (child, index) => {
-                    var el = angular.element(child);
-
-                    var colField = el.attr('tc-col-field');
-                    var colName = el.attr('tc-col-name') || colField || '';
-                    var sort = el.attr('tc-col-sort');
+                    var el = angular.element(child);                    
+                    var colField = el.attr('tc-field');                    
+                    var colName = el.attr('tc-name') || colField || '';
+                    var sort = el.attr('tc-sort');
                     var ignoreClick = el.attr('tc-ignore-click');
-                    var colClass = el.attr('tc-col-class');
-
-                    var sortExpression = (sort) ? (',\'' + sort + '\'') : '';
+                    var colClass = el.attr('tc-class');                    
 
                     var sortFn = '';
+                    var headerId = '';
 
-                    if (colField || sort) {
-                        sortFn = ' ng-click="' + attrs.tcGridOptions + '.internal.sort(\'' + (sort || colField) + '\'' + sortExpression + ')"';
-                        attrs.columns.push(sort || colField);
+                    if (colField) {
+                        sortFn = ' ng-click="vm.sort(\'' + (colField) + '\')"';
+                        headerId = ' id="' + attrs.tcGridOptions + "_" + colField.replace(/\./g, "") + '"';
+                        attrs.columns.push(colField);
+
+                        if(el.html() === '') {
+                            el.html('{{row.' + colField + '}}');
+                        }                                                
                     }
 
                     if (ignoreClick) 
                         el.attr('ng-click', '$event.stopPropagation();');
-                    
-                    if (el.html() === '' && colField)
-                        el.html('{{row.' + colField + '}}');
-                    
+
+
                     el.addClass(colClass || 'tc-style_td');
                     el.attr('tc-col-index', index + 1);
 
-                    headerHtml += '<div class="tc-display_th tc-style_th tc-display_sort tc-style_sort" id="' + attrs.tcGridOptions + '_' + (colField || sort).replace(/\./g, '') + '"' + sortFn + '>' + colName + '</div>';
+                    headerHtml += '<div class="tc-display_th tc-style_th tc-display_sort tc-style_sort"' + headerId + sortFn + '>' + colName + '</div>';
                 });
                 
                 var templateHtml = $templateCache.get('tcGrid.html');                
                 templateHtml = templateHtml.replace(/%OPTIONS%/g, attrs.tcGridOptions);
                 templateHtml = templateHtml.replace(/%HEADER%/g, headerHtml);
-                templateHtml = templateHtml.replace(/%DATA%/g, attrs.tcGridData);
+                templateHtml = templateHtml.replace(/%DATA%/g, attrs.tcData);
                 templateHtml = templateHtml.replace(/%GRIDCLASS%/g, attrs.tcGridClass || 'tc-grid');                
                 templateHtml = templateHtml.replace(/%ROWCLICK%/g, attrs.tcRowClick ? 'ng-click="' + attrs.tcRowClick + '"' : "");
                 templateHtml = templateHtml.replace(/%FILTER%/g, attrs.tcGridFilter ? ' | filter: ' + attrs.tcGridFilter : "");
@@ -61,84 +64,86 @@
 
                 return {
                     pre: (scope, ele, attrs, ctrl) => {},
-                    post: (scope, element, attrs, ctrl) => {}
+                    post: (scope, element, attrs, ctrl) => {                        
+                        $compile(element.contents())(scope);
+                    }
                 };
-            },
-            controller: ($scope, $element, $attrs) => {                
-                var options = $parse($attrs.tcGridOptions)($scope);
+            },            
+            controller: function($scope, $element, $attrs) {                
+                this.addColumn = addColumn;                        
 
                 var watchInitialized = false;
                 
+                var vm = {
+                    pageCount: 1,
+                    showFooter: false,                    
+                    prev: prev,
+                    next: next,
+                    first: first,                    
+                    last: last,
+                    sort: sort,
+                    columns: $attrs.columns
+                };             
+
                 return init();
 
                 function init() {
+                    $scope.vm = vm;
+
                     initOptions();
                     initWatch();
 
-                    if (options) {
-                        if (options.sorting.onSortChange)
+                    if ($scope.options) {
+                        if ($scope.options.sorting.onSortChange)
                             sortChanged();
-                        else if (options.paging.onPageChange)
+                        else if ($scope.options.paging.onPageChange)
                             pageChanged();
                     }
                 }
 
                 function initOptions() {
-                    if (!options) return;
+                    if (!$scope.options) return;                    
 
-                    options.internal = {
-                        pageCount: 1,
-                        showFooter: false,
-                        prev: prev,
-                        next: next,
-                        first: first,
-                        last: last,
-                        sort: sort,
-                        columns: $attrs.columns
-                    };
-
-                    if (options.paging)
+                    if ($scope.options.paging)
                         initPaging();
 
-                    if (options.sorting)
+                    if ($scope.options.sorting)
                         initSort();
                 }
 
                 function initWatch() {
-                    $scope.$watch($attrs.tcGridOptions, pageCountWatcher, true);
+                    $scope.$watch('options', pageCountWatcher, true);
 
                     function pageCountWatcher() {
                         if(!watchInitialized) {
                             watchInitialized = true;
                             return;
-                        }
-                        
-                        options = $parse($attrs.tcGridOptions)($scope);
+                        }                
 
-                        if (options && options.paging)
+                        if ($scope.options && $scope.options.paging)
                             getPageCount();                        
                     }
                 }
 
-                function initPaging() {
-                    if (!options.paging.pageSize || options.paging.pageSize < 1)
-                        options.paging.pageSize = 20;
+                function initPaging() {                    
+                    if (!$scope.options.paging.pageSize || $scope.options.paging.pageSize < 1)
+                        $scope.options.paging.pageSize = 20;
 
-                    if (!options.paging.totalItemCount || options.paging.totalItemCount < 0)
-                        options.paging.totalItemCount = 0;
+                    if (!$scope.options.paging.totalItemCount || $scope.options.paging.totalItemCount < 0)
+                        $scope.options.paging.totalItemCount = 0;
 
-                    if (!options.paging.currentPage || options.paging.currentPage < 1)
-                        options.paging.currentPage = 1;
+                    if (!$scope.options.paging.currentPage || $scope.options.paging.currentPage < 1)
+                        $scope.options.paging.currentPage = 1;
 
                     getPageCount();
 
-                    options.internal.showFooter = true;
+                    vm.showFooter = true;
                 }
 
                 function initSort() {
-                    if(!options.sorting.sort) return;
+                    if(!$scope.options.sorting.sort) return;
 
-                    angular.forEach(options.sorting.sort, (sortItem) => {
+                    angular.forEach($scope.options.sorting.sort, (sortItem) => {
                         var col = sortItem.split(' ')[0];
                         var dir = sortItem.split(' ')[1] || 'asc';
 
@@ -149,60 +154,60 @@
 
 
                 function getPageCount() {
-                    options.internal.pageCount = (options.paging.totalItemCount > 0)
-                        ? Math.ceil(options.paging.totalItemCount / options.paging.pageSize)
+                    vm.pageCount = ($scope.options.paging.totalItemCount > 0)
+                        ? Math.ceil($scope.options.paging.totalItemCount / $scope.options.paging.pageSize)
                         : 0;
 
-                    if (options.internal.pageCount < 1) {
-                        options.internal.pageCount = 1;
-                    }
+                    if (vm.pageCount < 1) {
+                        vm.pageCount = 1;
+                    }                    
                 }
 
                 function first() {
-                    options.paging.currentPage = 1;
+                    $scope.options.paging.currentPage = 1;
                     pageChanged();
                 }
 
                 function prev() {
-                    options.paging.currentPage -= 1;
-                    if (options.paging.currentPage < 1) {
-                        options.paging.currentPage = 1;
+                    $scope.options.paging.currentPage -= 1;
+                    if ($scope.options.paging.currentPage < 1) {
+                        $scope.options.paging.currentPage = 1;
                     }
                     pageChanged();
                 }
 
-                function next() {
-                    options.paging.currentPage += 1;
-                    if (options.paging.currentPage > options.internal.pageCount) {
-                        options.paging.currentPage = options.internal.pageCount;
+                function next() {                    
+                    $scope.options.paging.currentPage += 1;
+                    if ($scope.options.paging.currentPage > vm.pageCount) {
+                        $scope.options.paging.currentPage = vm.pageCount;
                     }
                     pageChanged();
                 }
 
                 function last() {
-                    options.paging.currentPage = options.internal.pageCount;
+                    $scope.options.paging.currentPage = vm.pageCount;
                     pageChanged();
                 }
 
                 function pageChanged() {
-                    if (options.paging.onPageChange) {
-                        options.paging.onPageChange(options.paging.currentPage, options.paging.pageSize, options.sorting.sort);
+                    if ($scope.options.paging.onPageChange) {
+                        $scope.options.paging.onPageChange($scope.options.paging.currentPage, $scope.options.paging.pageSize, $scope.options.sorting.sort);
                     }
                 }
 
                 function sortChanged() {
-                    if (options.sorting.onSortChange) {
-                        if (options.paging) {
-							options.paging.currentPage = 1;
-                            options.sorting.onSortChange(options.paging.currentPage, options.paging.pageSize, options.sorting.sort);
+                    if ($scope.options.sorting.onSortChange) {
+                        if ($scope.options.paging) {
+							$scope.options.paging.currentPage = 1;
+                            $scope.options.sorting.onSortChange($scope.options.paging.currentPage, $scope.options.paging.pageSize, $scope.options.sorting.sort);
                         } else {
-                            options.sorting.onSortChange(null, null, options.sorting.sort);
+                            $scope.options.sorting.onSortChange(null, null, $scope.options.sorting.sort);
                         }
                     }
                 }
                 
-                function sort(field, expression) {
-                    if (options.internal.columns.length === 0)
+                function sort(field) {
+                    if (vm.columns.length === 0)
                         return;
 
                     var col = fetchColumn(field);
@@ -216,13 +221,13 @@
 
                     col.addClass(direction);
 
-                    options.sorting.sort = [(expression || field) + ' ' + direction];
+                    $scope.options.sorting.sort = [field + ' ' + direction];
 
                     sortChanged();
                 }
 
                 function cleanSortClasses() {
-                    angular.forEach(options.internal.columns, col => {
+                    angular.forEach(vm.columns, col => {
                         var colElement = fetchColumn(col);
                         colElement.removeClass('desc');
                         colElement.removeClass('asc');
@@ -232,7 +237,12 @@
                 function fetchColumn(name) {
                     var id = $attrs.tcGridOptions + '_' + name.replace(/\./g, '');
                     return angular.element(document.getElementById(id));
-                }            
+                }
+
+                function addColumn(name) {
+                    if(vm.columns.indexOf(name) == -1)
+                        vm.columns.push(name);
+                }
             }
         };
 
@@ -245,7 +255,8 @@
             require: '^tcGrid',
             replace: true,
             transclude: true,
-            template: "<div class='tc-display_td' ng-transclude=''></div>"
+            template: "<div class='tc-display_td' ng-transclude></div>",
+            scope: true            
         };
     }    
 }());

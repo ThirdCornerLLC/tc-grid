@@ -8,13 +8,13 @@
 	<body ng-app="MyApp">
 		<div ng-controller="MyController">
 			<div class="col-md-offset-2 col-md-8">
-				<tc-grid tc-grid-data="vm.data" tc-grid-options="vm.gridOptions">
-					<tc-grid-column tc-col-field="Id"></tc-grid-column>
-					<tc-grid-column tc-col-field="Name"></tc-grid-column>
-					<tc-grid-column tc-col-field="Email"></tc-grid-column>
-					<tc-grid-column tc-col-field="Status"></tc-grid-column>
-				</tc-grid>
-				
+				<tc-grid tc-data="vm.data" tc-options="vm.gridOptions">
+					<tc-column tc-field="Id"></tc-column>
+					<tc-column tc-field="Name"></tc-column>
+					<tc-column tc-field="Email"></tc-column>
+					<tc-column tc-field="Status"></tc-column> 				
+					<tc-column><span ng-click="test()">tests</span></tc-column>	
+				</tc-grid>							
 			</div>
 		</div>
 

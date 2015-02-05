@@ -14,23 +14,22 @@
            
         </div>       
         
-        <div class="tc-style_pager" ng-show="%OPTIONS%.internal.showFooter && %OPTIONS%.internal.pageCount > 1">
+        <div class="tc-style_pager" ng-show="vm.showFooter && vm.pageCount > 1">
             <div class="tc-style_item-total">
-                {{(%OPTIONS%.paging.currentPage - 1) * %OPTIONS%.paging.pageSize + 1}}
+                {{(options.paging.currentPage - 1) * options.paging.pageSize + 1}}
                 -
-                {{%OPTIONS%.paging.currentPage === %OPTIONS%.internal.pageCount ? %OPTIONS%.paging.totalItemCount : %OPTIONS%.paging.currentPage * %OPTIONS%.paging.pageSize}}
+                {{options.paging.currentPage === vm.pageCount ? options.paging.totalItemCount : options.paging.currentPage * options.paging.pageSize}}
                 of
-                {{%OPTIONS%.paging.totalItemCount}}
+                {{options.paging.totalItemCount}}
             </div>
             <div class="tc-style_page-nav">
-                <span class="tc-style_page-display">{{%OPTIONS%.paging.currentPage}} / {{%OPTIONS%.internal.pageCount}}</span>
-                <button class="tc-button" ng-click="%OPTIONS%.internal.first()" ng-disabled="%OPTIONS%.paging.currentPage === 1"><strong>|</strong>&#9668;</button>
-                <button class="tc-button" ng-click="%OPTIONS%.internal.prev()" ng-disabled="%OPTIONS%.paging.currentPage === 1">&#9668;</button>
-                <button class="tc-button" ng-click="%OPTIONS%.internal.next()" ng-disabled="%OPTIONS%.paging.currentPage === %OPTIONS%.internal.pageCount">&#9658;</button>
-                <button class="tc-button" ng-click="%OPTIONS%.internal.last()" ng-disabled="%OPTIONS%.paging.currentPage === %OPTIONS%.internal.pageCount">&#9658;<strong>|</strong></button>
+                <span class="tc-style_page-display">{{options.paging.currentPage}} / {{vm.pageCount}}</span>
+                <button class="tc-button" ng-click="vm.first()" ng-disabled="options.paging.currentPage === 1"><strong>|</strong>&#9668;</button>
+                <button class="tc-button" ng-click="vm.prev()" ng-disabled="options.paging.currentPage === 1">&#9668;</button>
+                <button class="tc-button" ng-click="vm.next()" ng-disabled="options.paging.currentPage === vm.pageCount">&#9658;</button>
+                <button class="tc-button" ng-click="vm.last()" ng-disabled="options.paging.currentPage === vm.pageCount">&#9658;<strong>|</strong></button>
             </div>
             <div class="clearfix"></div>
-        </div>
-    </div>
-
+        </div>        
+    </div>    
 </div>
