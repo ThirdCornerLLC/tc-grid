@@ -1,207 +1,262 @@
 ﻿.tcGridColumnWidth(@name, @width){
-    [tc-col-field="@{name}"]{ width:@width; }
+  [tc-col-field="@{name}"]{ width:@width; }
 }
 
 .tcGridColumnIndexWidth(@index, @width){
-    [tc-col-index="@{index}"]{ width:@width; }
+  [tc-col-index="@{index}"]{ width:@width; }
 }
 
 .tcGrid_bootstrap(
-        @border:0,
-        @pagerColor: #FFF,
-        @headerColor: #FFF,
-        @rowColor: #FFF,
-        @rowColorAlternating: #FFF,
-        @rowColorHover: #FFF,  
-        @rowBorder: 1px solid #ddd,
-        @headerRowBorder: 2px solid #ddd
+  @border:0,
+  @pagerColor: #FFF,
+  @headerColor: #FFF,
+  @rowColor: #FFF,
+  @rowColorAlternating: #FFF,
+  @rowColorHover: #FFF,
+  @rowBorder: 1px solid #ddd,
+  @headerRowBorder: 2px solid #ddd
 ){
-    .tcStyle(
-        @border: @border,
-        @pagerColor: @pagerColor,
-        @headerColor: @headerColor,
-        @rowColor: @rowColor,
-        @rowColorAlternating: @rowColorAlternating,
-        @rowColorHover: @rowColorHover,  
-        @rowBorder: @rowBorder,
-        @headerRowBorder: @headerRowBorder
-    );
+  .tcStyle(
+  @border: @border,
+  @pagerColor: @pagerColor,
+  @headerColor: @headerColor,
+  @rowColor: @rowColor,
+  @rowColorAlternating: @rowColorAlternating,
+  @rowColorHover: @rowColorHover,
+  @rowBorder: @rowBorder,
+  @headerRowBorder: @headerRowBorder
+  );
 
-    .tcDisplay();
+  .tcDisplay();
 }
 
-.tcDisplay() {        
+.tcDisplay() {
+
+  @media screen and (min-width: 769px) {
     .tc-display_table{
-        display: table;        
-        
-        .tc-display_thead {            
-            display: table-header-group;
-         
-            .tc-display_tr {
-                display: table-row;                
+      display: table;
+      width: 100%;
 
-                .tc-display_th {               
-                    display: table-cell;                    
-                }
-            }
+      .tc-display_thead {
+        display: table-header-group;
+
+        .tc-display_tr {
+          display: table-row;
+
+          .tc-display_th {
+            display: table-cell;
+          }
         }
+      }
 
-        .tc-display_tbody {        
-            display: table-row-group;    
+      .tc-display_tbody {
+        display: table-row-group;
 
-            .tc-display_tr{
-                display: table-row;
+        .tc-display_tr{
+          display: table-row;
 
-                .tc-display_td { 
-                    display: table-cell;                                 
-                }                
-            }            
+          .tc-mobile-header {
+            display: none;
+          }
+
+          .tc-display_td {
+            display: table-cell;
+          }
         }
+      }
     }
+  }
+
+  @media screen and (max-width: 768px) {
+    .tc-display_table{
+      display: block;
+
+      .tc-display_thead {
+        display: none;
+      }
+
+      .tc-display_tbody {
+        display: block;
+
+        .tc-display_tr{
+          display: block;
+
+          .tc-mobile-header {
+            display: inline-block;
+          }
+
+          .tc-display_td {
+            display: block;
+          }
+        }
+      }
+    }
+  }
 }
 
 
 .tcStyle(
-    @border:1px solid #ddd, 
-    @pagerColor:#ddd, 
-    @cellPadding:5px, 
-    @headerColor:#FDFDFD, 
-    @rowColor:#f5f5f5, 
-    @rowColorAlternating:#FDFDFD, 
-    @rowColorHover:#f0f0f0, 
-    @rowBorder: none, 
-    @headerRowBorder:1px solid #ddd,
-    @fontSize:inherit
+  @border:1px solid #ddd,
+  @pagerColor:#ddd,
+  @cellPadding:5px,
+  @headerColor:#FDFDFD,
+  @rowColor:#f5f5f5,
+  @rowColorAlternating:#FDFDFD,
+  @rowColorHover:#f0f0f0,
+  @rowBorder: none,
+  @headerRowBorder:1px solid #ddd,
+  @fontSize:inherit
 ){
-    font-size: @fontSize;
-    
-    .tc-style_table{        
-        margin-bottom: 0;
-        width: 100%; 
-        border-bottom: @border;
-        
-        .tc-display_thead {                                 
-            .tc-style_tr {                
-                background-color: @headerColor;        
-            }
+  font-size: @fontSize;
 
-            .tc-style_th {                                   
-                font-weight: bold;
-                vertical-align: bottom;   
+  .tc-style_table{
+    margin-bottom: 0;
+    border-bottom: @border;
 
-                border-top: @border;
-                border-left: @border;
-                border-bottom: @headerRowBorder;
-                padding: @cellPadding;
-     
-                &::selection { background: transparent; }
-                &::-moz-selection { background: transparent; }
+    .tc-display_thead {
+      .tc-style_tr {
+        background-color: @headerColor;
+      }
 
-                &:last-child {
-                    border-right: @border;
-                }
-            }
+      .tc-style_th {
+        font-weight: bold;
+        vertical-align: bottom;
 
-            .tc-style_sort {
-                &:after{
-                    margin-left: 5px;                    
-                }
-                    
-                &.desc:after { content: "\25BC";}
-                &.asc:after { content: "\25B2";}
-            }
-        }
+        border-top: @border;
+        border-left: @border;
+        border-bottom: @headerRowBorder;
 
-        .tc-display_tbody {                    
-            .tc-style_tr{                                
-                &:nth-child(odd) {
-                    background-color: @rowColor;
-                }
-
-                &:nth-child(even) {
-                    background-color: @rowColorAlternating;
-                }
-
-                &[ng-click]:hover {
-                    background-color: @rowColorHover;
-                }                
-            }   
-            .tc-display_tr {                           
-                .tc-style_td {                     
-                    border-left: @border;
-                    border-top: @rowBorder;
-                    padding: @cellPadding;
-
-                    &:last-child {
-                        border-right: @border;
-                    }
-                }      
-                            
-                &:first-child{
-                    .tc-style_td {
-                        border-top:none;
-                    }
-                }
-            }   
-        }     
-    }
-
-    .tc-style_pager {        
-        border-bottom-left-radius: 5px;
-        border-bottom-right-radius: 5px;
-
-        background-color: @pagerColor;        
         padding: @cellPadding;
 
-        .tc-style_item-total {     
-            float:left;           
+        &::selection { background: transparent; }
+        &::-moz-selection { background: transparent; }
+        &:last-child {
+          border-right: @border;
         }
 
-        .tc-style_page-nav {    
-            
-            position: relative;
-            right: 5px;
-            text-align: right;        
 
-            .tc-style_page-display {
-                padding-right: @cellPadding;
-            }
+      }
+
+      .tc-style_sort {
+        &:after{
+          margin-left: 5px;
         }
+
+        &.desc:after { content: "\25BC";}
+        &.asc:after { content: "\25B2";}
+      }
     }
+
+    .tc-display_tbody {
+      .tc-style_tr{
+        &:nth-child(odd) {
+          background-color: @rowColor;
+        }
+
+        &:nth-child(even) {
+          background-color: @rowColorAlternating;
+        }
+
+        &[ng-click]:hover {
+          background-color: @rowColorHover;
+        }
+      }
+      .tc-display_tr {
+
+
+        .tc-mobile-header {
+          padding-right: 5px;
+          font-weight: bold;
+        }
+
+
+        .tc-style_td {
+          border-left: @border;
+          border-top: @rowBorder;
+          padding: @cellPadding;
+
+          @media screen and (min-width: 769px) {
+            &:last-child {
+              border-right: @border;
+            }
+          }
+
+          @media screen and (max-width: 768px) {
+            border-right: @border;
+          }
+        }
+
+
+        @media screen and (min-width: 769px) {
+          &:first-child {
+            border-top: none;
+          }
+        }
+
+        @media screen and (max-width: 768px) {
+          &:first-child {
+            border-top: @border;
+          }
+        }
+      }
+    }
+  }
+
+  .tc-style_pager {
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+
+    background-color: @pagerColor;
+    padding: @cellPadding;
+
+    .tc-style_item-total {
+      float:left;
+    }
+
+    .tc-style_page-nav {
+
+      position: relative;
+      right: 5px;
+      text-align: right;
+
+      .tc-style_page-display {
+        padding-right: @cellPadding;
+      }
+    }
+  }
 }
 
 
 .tcGrid__scope {
-    .tc-grid { .tcStyle(); .tcDisplay(); }
-    .tc-grid_bootstrap { .tcGrid_bootstrap(); .tcDisplay(); }
+  .tc-grid { .tcStyle(); .tcDisplay(); }
+  .tc-grid_bootstrap { .tcGrid_bootstrap(); .tcDisplay(); }
 
-    .tc-button {
-        padding: 3px 4px;
-        cursor: pointer;
-        display: inline-block;
-        border-radius: 3px;
-        border: 1px solid #ccc;
-        background-color: white;
-        box-shadow: none;
-        text-shadow: none;
+  .tc-button {
+    padding: 3px 4px;
+    cursor: pointer;
+    display: inline-block;
+    border-radius: 3px;
+    border: 1px solid #ccc;
+    background-color: white;
+    box-shadow: none;
+    text-shadow: none;
 
-        &:hover {
-            border: 1px solid #aaa;
-            background-color: #f5f5f5;
-        }
+    &:hover {
+      border: 1px solid #aaa;
+      background-color: #f5f5f5;
     }
+  }
 
-    .clearfix {
-        *zoom: 1;
-        &:before,
-        &:after {
-            display: table;
-            content: "";    
-            line-height: 0;
-        }
-        &:after {
-            clear: both;
-        }
+  .clearfix {
+    *zoom: 1;
+    &:before,
+    &:after {
+      display: table;
+      content: "";
+      line-height: 0;
     }
-
+    &:after {
+      clear: both;
+    }
+  }
 }    

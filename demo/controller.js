@@ -2,7 +2,7 @@
 
 	var app = angular.module('MyApp', ['tc-grid']);
 
-	app.controller('MyController', ['$scope', MyController]) 
+	app.controller('MyController', ['$scope', MyController]);
 
 	function MyController($scope) {
 		var dataOrig =  [
@@ -69,7 +69,7 @@
 			vm.data = dataOrig.slice(0, 2);
 		}
 
-		$scope.test = function(){ console.log("I'm the controller"); }
+		$scope.test = function(){ alert("I'm the controller"); }
 	}
 
 }());

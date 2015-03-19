@@ -45,6 +45,11 @@
                     el.attr('tc-col-index', index + 1);
 
                     headerHtml += '<div class="tc-display_th tc-style_th tc-display_sort tc-style_sort"' + headerId + sortFn + '>' + colName + '</div>';
+
+                    if(colName) {
+                        var mobileHeader = '<div class="tc-mobile-header">' + colName + '</div>';
+                        el.prepend(mobileHeader);
+                    }
                 });
                 
                 var templateHtml = $templateCache.get('tcGrid.html');                
