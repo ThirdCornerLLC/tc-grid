@@ -2,10 +2,6 @@ html, body {
     font-family: 'Arimo', sans-serif;
 }
 
-/*body {*/
-    /*overflow: hidden;*/
-/*}*/
-
 .tc-alert {
 	border-left: 1px solid #ddd;
 }
