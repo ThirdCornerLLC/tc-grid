@@ -1,6 +1,8 @@
 ##tc-grid
 A declarative grid for AngularJS
 
+###[Demo](http://plnkr.co/edit/8qBE02IpQm5HdNoHgVEg?p=preview)
+
 ##Installation
 
 ```sh
