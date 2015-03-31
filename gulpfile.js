@@ -2,7 +2,7 @@ var gulp = require('gulp');
 var concat = require('gulp-concat');
 var less = require('gulp-less');
 var templateCache = require('gulp-angular-templatecache');
-var to5 = require('gulp-6to5');
+var babel = require('gulp-babel');
 var ngAnnotate = require('gulp-ng-annotate');
 var addSrc = require('gulp-add-src');
 var filter = require('gulp-filter');
@@ -36,7 +36,7 @@ gulp.task('build:js', function() {
 
     return pipe(
         gulp.src(config.src.js),        
-        to5(),
+        babel(),
         ngAnnotate(),
         addSrc(config.src.html),
         htmlFilter,
