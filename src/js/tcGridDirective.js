@@ -29,7 +29,7 @@
 
                     if (colField) {
                         sortFn = ' ng-click="vm.sort(\'' + (colField) + '\')"';
-                        headerId = ' id="' + attrs.tcGridOptions + "_" + colField.replace(/\./g, "") + '"';
+                        headerId = ' id="' + attrs.tcOptions + "_" + colField.replace(/\./g, "") + '"';
                         attrs.columns.push(colField);
 
                         if(el.html() === '') {
@@ -53,7 +53,7 @@
                 });
                 
                 var templateHtml = $templateCache.get('tcGrid.html');                
-                templateHtml = templateHtml.replace(/%OPTIONS%/g, attrs.tcGridOptions);
+                templateHtml = templateHtml.replace(/%OPTIONS%/g, attrs.tcOptions);
                 templateHtml = templateHtml.replace(/%HEADER%/g, headerHtml);
                 templateHtml = templateHtml.replace(/%DATA%/g, attrs.tcData);
                 templateHtml = templateHtml.replace(/%GRIDCLASS%/g, attrs.tcGridClass || 'tc-grid');                
@@ -240,7 +240,7 @@
                 }
 
                 function fetchColumn(name) {
-                    var id = $attrs.tcGridOptions + '_' + name.replace(/\./g, '');
+                    var id = $attrs.tcOptions + '_' + name.replace(/\./g, '');
                     return angular.element(document.getElementById(id));
                 }
 
