@@ -59,7 +59,8 @@
                 templateHtml = templateHtml.replace(/%GRIDCLASS%/g, attrs.tcGridClass || 'tc-grid');                
                 templateHtml = templateHtml.replace(/%ROWCLICK%/g, attrs.tcRowClick ? 'ng-click="' + attrs.tcRowClick + '"' : "");
                 templateHtml = templateHtml.replace(/%FILTER%/g, attrs.tcGridFilter ? ' | filter: ' + attrs.tcGridFilter : "");
-                templateHtml = templateHtml.replace(/%ROWCLASS%/g, attrs.tcRowClass || 'tc-style_tr');
+                templateHtml = templateHtml.replace(/%ROWCLASS%/g, attrs.tcRowClass ? '' : 'tc-style_tr');
+				templateHtml = templateHtml.replace(/%ROWEXPRESSION%/g, attrs.tcRowClass || '');
                 templateHtml = templateHtml.replace(/%CHILDREN%/g, children.parent().html());
 
                 var template = angular.element(templateHtml);
