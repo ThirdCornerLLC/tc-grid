@@ -83,7 +83,8 @@
                     first: first,                    
                     last: last,
                     sort: sort,
-                    columns: $attrs.columns
+                    columns: $attrs.columns,
+                    updatePageSize: updatePageSize
                 };
 
                 init();
@@ -120,9 +121,9 @@
                         pageCountWatcher();
                     }, true);
 
-                    $scope.$parent.$watch($attrs.tcData, function(newVal) {
+                    $scope.$parent.$watchCollection($attrs.tcData, function(newVal) {
                         $scope.data = newVal;
-                    }, true);
+                    });
 
                     function pageCountWatcher() {
                         if(!watchInitialized) {
@@ -259,6 +260,10 @@
                 function addColumn(name) {
                     if(vm.columns.indexOf(name) == -1)
                         vm.columns.push(name);
+                }
+
+                function updatePageSize() {
+                    pageChanged();
                 }
             }
         };
