@@ -120,7 +120,7 @@
                         pageCountWatcher();
                     }, true);
 
-                    $scope.$parent.$watch($attrs.tcData, function(newVal) {
+                    $scope.$parent.$watchCollection($attrs.tcData, function(newVal) {
                         $scope.data = newVal;
                     });
 
