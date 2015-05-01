@@ -7,9 +7,7 @@
     function tcGrid($parse, $compile, $templateCache) {
         return {
             restrict: "E",
-            scope: {
-                options: "=?tcOptions"
-            },
+            scope: true,
             compile: function (element, attrs, transclude) {
                 var children = element.children();
                 var headerHtml = "";
@@ -53,7 +51,6 @@
                 var templateHtml = $templateCache.get("tcGrid.html");
                 templateHtml = templateHtml.replace(/%OPTIONS%/g, attrs.tcOptions);
                 templateHtml = templateHtml.replace(/%HEADER%/g, headerHtml);
-                templateHtml = templateHtml.replace(/%DATA%/g, attrs.tcData);
                 templateHtml = templateHtml.replace(/%GRIDCLASS%/g, attrs.tcGridClass || "tc-grid");
                 templateHtml = templateHtml.replace(/%ROWCLICK%/g, attrs.tcRowClick ? "ng-click=\"" + attrs.tcRowClick + "\"" : "");
                 templateHtml = templateHtml.replace(/%FILTER%/g, attrs.tcGridFilter ? " | filter: " + attrs.tcGridFilter : "");
@@ -68,9 +65,7 @@
 
                 return {
                     pre: function (scope, ele, attrs, ctrl) {},
-                    post: function (scope, element, attrs, ctrl) {
-                        $compile(element.contents())(scope);
-                    }
+                    post: function (scope, element, attrs, ctrl) {}
                 };
             },
             controller: ["$scope", "$element", "$attrs", function controller($scope, $element, $attrs) {
@@ -89,10 +84,12 @@
                     columns: $attrs.columns
                 };
 
-                return init();
+                init();
 
                 function init() {
                     $scope.vm = vm;
+                    $scope.options = $parse($attrs.tcOptions)($scope.$parent);
+                    $scope.data = $parse($attrs.tcData)($scope.$parent);
 
                     initOptions();
                     initWatch();
@@ -111,7 +108,14 @@
                 }
 
                 function initWatch() {
-                    $scope.$watch("options", pageCountWatcher, true);
+                    $scope.$parent.$watch($attrs.tcOptions, function (newVal) {
+                        $scope.options = newVal;
+                        pageCountWatcher();
+                    }, true);
+
+                    $scope.$parent.$watch($attrs.tcData, function (newVal) {
+                        $scope.data = newVal;
+                    });
 
                     function pageCountWatcher() {
                         if (!watchInitialized) {
@@ -124,15 +128,22 @@
                 }
 
                 function initPaging() {
-                    if (!$scope.options.paging.pageSize || $scope.options.paging.pageSize < 1) $scope.options.paging.pageSize = 20;
-
+                    if (!$scope.options.paging.pageSize || $scope.options.paging.pageSize < 1) {
+                        if (options.paging.pageSizeOptions) {
+                            $scope.options.paging.pageSize = options.paging.pageSizeOptions[0];
+                        } else {
+                            $scope.options.paging.pageSize = 20;
+                        }
+                    }
                     if (!$scope.options.paging.totalItemCount || $scope.options.paging.totalItemCount < 0) $scope.options.paging.totalItemCount = 0;
 
                     if (!$scope.options.paging.currentPage || $scope.options.paging.currentPage < 1) $scope.options.paging.currentPage = 1;
 
                     getPageCount();
 
-                    vm.showFooter = true;
+                    if (!$attrs.tcHideFooter) {
+                        vm.showFooter = true;
+                    }
                 }
 
                 function initSort() {
@@ -248,4 +259,4 @@
         };
     }
 })();
-angular.module("tc-grid").run(["$templateCache", function($templateCache) {$templateCache.put("tcGrid.html","<div class=\"tcGrid__scope\">\n    <div class=\"%GRIDCLASS%\">\n        <div class=\"tc-display_table tc-style_table\">\n            <div class=\"tc-display_thead tc-style_thead\">\n                <div class=\"tc-display_tr tc-style_tr\">\n                    %HEADER%\n                </div>\n            </div>\n            <div class=\"tc-display_tbody tc-style_tbody\">\n                <div class=\"tc-display_tr %ROWCLASS%\" ng-class=\"%ROWEXPRESSION%\" id=\"tc-row-container\" ng-repeat=\"row in %DATA% %FILTER%\" %ROWCLICK%>\n                    %CHILDREN%\n                </div>\n            </div>\n           \n        </div>       \n        \n        <div class=\"tc-style_pager\" ng-show=\"vm.showFooter && vm.pageCount > 1\">\n            <div class=\"tc-style_item-total\">\n                {{(options.paging.currentPage - 1) * options.paging.pageSize + 1}}\n                -\n                {{options.paging.currentPage === vm.pageCount ? options.paging.totalItemCount : options.paging.currentPage * options.paging.pageSize}}\n                of\n                {{options.paging.totalItemCount}}\n            </div>\n            <div class=\"tc-style_page-nav\">\n                <span class=\"tc-style_page-display\">{{options.paging.currentPage}} / {{vm.pageCount}}</span>\n                <button class=\"tc-button\" ng-click=\"vm.first()\" ng-disabled=\"options.paging.currentPage === 1\"><strong>|</strong>&#9668;</button>\n                <button class=\"tc-button\" ng-click=\"vm.prev()\" ng-disabled=\"options.paging.currentPage === 1\">&#9668;</button>\n                <button class=\"tc-button\" ng-click=\"vm.next()\" ng-disabled=\"options.paging.currentPage === vm.pageCount\">&#9658;</button>\n                <button class=\"tc-button\" ng-click=\"vm.last()\" ng-disabled=\"options.paging.currentPage === vm.pageCount\">&#9658;<strong>|</strong></button>\n            </div>\n            <div class=\"clearfix\"></div>\n        </div>        \n    </div>    \n</div>");}]);
+angular.module("tc-grid").run(["$templateCache", function($templateCache) {$templateCache.put("tcGrid.html","<div class=\"tcGrid__scope\">\r\n    <div class=\"%GRIDCLASS%\">\r\n        <div class=\"tc-display_table tc-style_table\">\r\n            <div class=\"tc-display_thead tc-style_thead\">\r\n                <div class=\"tc-display_tr tc-style_tr\">\r\n                    %HEADER%\r\n                </div>\r\n            </div>\r\n            <div class=\"tc-display_tbody tc-style_tbody\">\r\n                <div class=\"tc-display_tr %ROWCLASS%\" ng-class=\"%ROWEXPRESSION%\" id=\"tc-row-container\" ng-repeat=\"row in data %FILTER%\" %ROWCLICK%>\r\n                    %CHILDREN%\r\n                </div>\r\n            </div>\r\n           \r\n        </div>       \r\n        \r\n        <div class=\"tc-style_pager\" ng-show=\"vm.showFooter && vm.pageCount > 1\">\r\n            <div class=\"tc-style_item-total\">\r\n                {{(options.paging.currentPage - 1) * options.paging.pageSize + 1}}\r\n                -\r\n                {{options.paging.currentPage === vm.pageCount ? options.paging.totalItemCount : options.paging.currentPage * options.paging.pageSize}}\r\n                of\r\n                {{options.paging.totalItemCount}}\r\n            </div>\r\n            <div class=\"tc-style_page-nav\">\r\n                <span class=\"tc-style_page-display\">{{options.paging.currentPage}} / {{vm.pageCount}}</span>\r\n                <select ng-options=\"pageSize for pageSize in options.paging.pageSizeOptions\" ng-model=\"options.paging.pageSize\"></select>\r\n                <button class=\"tc-button\" ng-click=\"vm.first()\" ng-disabled=\"options.paging.currentPage === 1\"><strong>|</strong>&#9668;</button>\r\n                <button class=\"tc-button\" ng-click=\"vm.prev()\" ng-disabled=\"options.paging.currentPage === 1\">&#9668;</button>\r\n                <button class=\"tc-button\" ng-click=\"vm.next()\" ng-disabled=\"options.paging.currentPage === vm.pageCount\">&#9658;</button>\r\n                <button class=\"tc-button\" ng-click=\"vm.last()\" ng-disabled=\"options.paging.currentPage === vm.pageCount\">&#9658;<strong>|</strong></button>\r\n            </div>\r\n            <div class=\"clearfix\"></div>\r\n        </div>        \r\n    </div>    \r\n</div>");}]);
