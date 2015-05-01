@@ -116,7 +116,7 @@
 
                     $scope.$parent.$watchCollection($attrs.tcData, function (newVal) {
                         $scope.data = newVal;
-                    }, true);
+                    });
 
                     function pageCountWatcher() {
                         if (!watchInitialized) {
