@@ -81,7 +81,8 @@
                     first: first,
                     last: last,
                     sort: sort,
-                    columns: $attrs.columns
+                    columns: $attrs.columns,
+                    updatePageSize: updatePageSize
                 };
 
                 init();
@@ -113,9 +114,9 @@
                         pageCountWatcher();
                     }, true);
 
-                    $scope.$parent.$watch($attrs.tcData, function (newVal) {
+                    $scope.$parent.$watchCollection($attrs.tcData, function (newVal) {
                         $scope.data = newVal;
-                    });
+                    }, true);
 
                     function pageCountWatcher() {
                         if (!watchInitialized) {
@@ -243,6 +244,10 @@
                 function addColumn(name) {
                     if (vm.columns.indexOf(name) == -1) vm.columns.push(name);
                 }
+
+                function updatePageSize() {
+                    pageChanged();
+                }
             }]
         };
     }
@@ -259,4 +264,4 @@
         };
     }
 })();
-angular.module("tc-grid").run(["$templateCache", function($templateCache) {$templateCache.put("tcGrid.html","<div class=\"tcGrid__scope\">\r\n    <div class=\"%GRIDCLASS%\">\r\n        <div class=\"tc-display_table tc-style_table\">\r\n            <div class=\"tc-display_thead tc-style_thead\">\r\n                <div class=\"tc-display_tr tc-style_tr\">\r\n                    %HEADER%\r\n                </div>\r\n            </div>\r\n            <div class=\"tc-display_tbody tc-style_tbody\">\r\n                <div class=\"tc-display_tr %ROWCLASS%\" ng-class=\"%ROWEXPRESSION%\" id=\"tc-row-container\" ng-repeat=\"row in data %FILTER%\" %ROWCLICK%>\r\n                    %CHILDREN%\r\n                </div>\r\n            </div>\r\n           \r\n        </div>       \r\n        \r\n        <div class=\"tc-style_pager\" ng-show=\"vm.showFooter && vm.pageCount > 1\">\r\n            <div class=\"tc-style_item-total\">\r\n                {{(options.paging.currentPage - 1) * options.paging.pageSize + 1}}\r\n                -\r\n                {{options.paging.currentPage === vm.pageCount ? options.paging.totalItemCount : options.paging.currentPage * options.paging.pageSize}}\r\n                of\r\n                {{options.paging.totalItemCount}}\r\n            </div>\r\n            <div class=\"tc-style_page-nav\">\r\n                <span class=\"tc-style_page-display\">{{options.paging.currentPage}} / {{vm.pageCount}}</span>\r\n                <select ng-options=\"pageSize for pageSize in options.paging.pageSizeOptions\" ng-model=\"options.paging.pageSize\"></select>\r\n                <button class=\"tc-button\" ng-click=\"vm.first()\" ng-disabled=\"options.paging.currentPage === 1\"><strong>|</strong>&#9668;</button>\r\n                <button class=\"tc-button\" ng-click=\"vm.prev()\" ng-disabled=\"options.paging.currentPage === 1\">&#9668;</button>\r\n                <button class=\"tc-button\" ng-click=\"vm.next()\" ng-disabled=\"options.paging.currentPage === vm.pageCount\">&#9658;</button>\r\n                <button class=\"tc-button\" ng-click=\"vm.last()\" ng-disabled=\"options.paging.currentPage === vm.pageCount\">&#9658;<strong>|</strong></button>\r\n            </div>\r\n            <div class=\"clearfix\"></div>\r\n        </div>        \r\n    </div>    \r\n</div>");}]);
+angular.module("tc-grid").run(["$templateCache", function($templateCache) {$templateCache.put("tcGrid.html","<div class=\"tcGrid__scope\">\r\n    <div class=\"%GRIDCLASS%\">\r\n        <div class=\"tc-display_table tc-style_table\">\r\n            <div class=\"tc-display_thead tc-style_thead\">\r\n                <div class=\"tc-display_tr tc-style_tr\">\r\n                    %HEADER%\r\n                </div>\r\n            </div>\r\n            <div class=\"tc-display_tbody tc-style_tbody\">\r\n                <div class=\"tc-display_tr %ROWCLASS%\" ng-class=\"%ROWEXPRESSION%\" id=\"tc-row-container\" ng-repeat=\"row in data %FILTER%\" %ROWCLICK%>\r\n                    %CHILDREN%\r\n                </div>\r\n            </div>\r\n           \r\n        </div>       \r\n        \r\n        <div class=\"tc-style_pager\" ng-show=\"vm.showFooter && vm.pageCount > 1\">\r\n            <div class=\"tc-style_item-total\">\r\n                {{(options.paging.currentPage - 1) * options.paging.pageSize + 1}}\r\n                -\r\n                {{options.paging.currentPage === vm.pageCount ? options.paging.totalItemCount : options.paging.currentPage * options.paging.pageSize}}\r\n                of\r\n                {{options.paging.totalItemCount}}\r\n            </div>\r\n            <div class=\"tc-style_page-nav\">\r\n                <span class=\"tc-style_page-display\">{{options.paging.currentPage}} / {{vm.pageCount}}</span>\r\n                <select ng-options=\"pageSize for pageSize in options.paging.pageSizeOptions\" ng-model=\"options.paging.pageSize\" ng-change=\"vm.updatePageSize()\"></select>\r\n                <button class=\"tc-button\" ng-click=\"vm.first()\" ng-disabled=\"options.paging.currentPage === 1\"><strong>|</strong>&#9668;</button>\r\n                <button class=\"tc-button\" ng-click=\"vm.prev()\" ng-disabled=\"options.paging.currentPage === 1\">&#9668;</button>\r\n                <button class=\"tc-button\" ng-click=\"vm.next()\" ng-disabled=\"options.paging.currentPage === vm.pageCount\">&#9658;</button>\r\n                <button class=\"tc-button\" ng-click=\"vm.last()\" ng-disabled=\"options.paging.currentPage === vm.pageCount\">&#9658;<strong>|</strong></button>\r\n            </div>\r\n            <div class=\"clearfix\"></div>\r\n        </div>        \r\n    </div>    \r\n</div>");}]);

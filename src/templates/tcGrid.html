@@ -24,7 +24,7 @@
             </div>
             <div class="tc-style_page-nav">
                 <span class="tc-style_page-display">{{options.paging.currentPage}} / {{vm.pageCount}}</span>
-                <select ng-options="pageSize for pageSize in options.paging.pageSizeOptions" ng-model="options.paging.pageSize"></select>
+                <select ng-options="pageSize for pageSize in options.paging.pageSizeOptions" ng-model="options.paging.pageSize" ng-change="vm.updatePageSize()"></select>
                 <button class="tc-button" ng-click="vm.first()" ng-disabled="options.paging.currentPage === 1"><strong>|</strong>&#9668;</button>
                 <button class="tc-button" ng-click="vm.prev()" ng-disabled="options.paging.currentPage === 1">&#9668;</button>
                 <button class="tc-button" ng-click="vm.next()" ng-disabled="options.paging.currentPage === vm.pageCount">&#9658;</button>
