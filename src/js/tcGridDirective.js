@@ -7,9 +7,7 @@
     function tcGrid($parse, $compile, $templateCache) {
         return {
             restrict: 'E',
-            scope: {
-                options: '=?tcOptions'
-            },            
+            scope: true,
             compile: (element, attrs, transclude) => {
                 var children = element.children();                
                 var headerHtml = "";
@@ -55,7 +53,6 @@
                 var templateHtml = $templateCache.get('tcGrid.html');                
                 templateHtml = templateHtml.replace(/%OPTIONS%/g, attrs.tcOptions);
                 templateHtml = templateHtml.replace(/%HEADER%/g, headerHtml);
-                templateHtml = templateHtml.replace(/%DATA%/g, attrs.tcData);
                 templateHtml = templateHtml.replace(/%GRIDCLASS%/g, attrs.tcGridClass || 'tc-grid');                
                 templateHtml = templateHtml.replace(/%ROWCLICK%/g, attrs.tcRowClick ? 'ng-click="' + attrs.tcRowClick + '"' : "");
                 templateHtml = templateHtml.replace(/%FILTER%/g, attrs.tcGridFilter ? ' | filter: ' + attrs.tcGridFilter : "");
@@ -70,9 +67,7 @@
 
                 return {
                     pre: (scope, ele, attrs, ctrl) => {},
-                    post: (scope, element, attrs, ctrl) => {                        
-                        $compile(element.contents())(scope);
-                    }
+                    post: (scope, element, attrs, ctrl) => {}
                 };
             },            
             controller: function($scope, $element, $attrs) {                
@@ -82,19 +77,21 @@
                 
                 var vm = {
                     pageCount: 1,
-                    showFooter: false,                    
+                    showFooter: false,
                     prev: prev,
                     next: next,
                     first: first,                    
                     last: last,
                     sort: sort,
                     columns: $attrs.columns
-                };             
+                };
 
-                return init();
+                init();
 
                 function init() {
                     $scope.vm = vm;
+                    $scope.options = $parse($attrs.tcOptions)($scope.$parent);
+                    $scope.data = $parse($attrs.tcData)($scope.$parent);
 
                     initOptions();
                     initWatch();
@@ -118,7 +115,14 @@
                 }
 
                 function initWatch() {
-                    $scope.$watch('options', pageCountWatcher, true);
+                    $scope.$parent.$watch($attrs.tcOptions, function(newVal) {
+                        $scope.options = newVal;
+                        pageCountWatcher();
+                    }, true);
+
+                    $scope.$parent.$watch($attrs.tcData, function(newVal) {
+                        $scope.data = newVal;
+                    });
 
                     function pageCountWatcher() {
                         if(!watchInitialized) {
@@ -131,10 +135,15 @@
                     }
                 }
 
-                function initPaging() {                    
+                function initPaging() {
                     if (!$scope.options.paging.pageSize || $scope.options.paging.pageSize < 1)
-                        $scope.options.paging.pageSize = 20;
-
+                    {
+                        if(options.paging.pageSizeOptions) {
+                            $scope.options.paging.pageSize = options.paging.pageSizeOptions[0];
+                        } else {
+                            $scope.options.paging.pageSize = 20;
+                        }
+                    }
                     if (!$scope.options.paging.totalItemCount || $scope.options.paging.totalItemCount < 0)
                         $scope.options.paging.totalItemCount = 0;
 
@@ -143,7 +152,9 @@
 
                     getPageCount();
 
-                    vm.showFooter = true;
+                    if(!$attrs.tcHideFooter) {
+                        vm.showFooter = true;
+                    }
                 }
 
                 function initSort() {

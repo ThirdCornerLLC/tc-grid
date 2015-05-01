@@ -7,7 +7,7 @@
                 </div>
             </div>
             <div class="tc-display_tbody tc-style_tbody">
-                <div class="tc-display_tr %ROWCLASS%" ng-class="%ROWEXPRESSION%" id="tc-row-container" ng-repeat="row in %DATA% %FILTER%" %ROWCLICK%>
+                <div class="tc-display_tr %ROWCLASS%" ng-class="%ROWEXPRESSION%" id="tc-row-container" ng-repeat="row in data %FILTER%" %ROWCLICK%>
                     %CHILDREN%
                 </div>
             </div>
@@ -24,6 +24,7 @@
             </div>
             <div class="tc-style_page-nav">
                 <span class="tc-style_page-display">{{options.paging.currentPage}} / {{vm.pageCount}}</span>
+                <select ng-options="pageSize for pageSize in options.paging.pageSizeOptions" ng-model="options.paging.pageSize"></select>
                 <button class="tc-button" ng-click="vm.first()" ng-disabled="options.paging.currentPage === 1"><strong>|</strong>&#9668;</button>
                 <button class="tc-button" ng-click="vm.prev()" ng-disabled="options.paging.currentPage === 1">&#9668;</button>
                 <button class="tc-button" ng-click="vm.next()" ng-disabled="options.paging.currentPage === vm.pageCount">&#9658;</button>

@@ -37,28 +37,29 @@
 			data: [],
 			gridOptions: {
 				paging: {
-					onPageChange: function(page, count, sort) {						
-						vm.data = dataOrig.slice((page-1) * count, page * count);
+					onPageChange: function (page, count, sort) {
+						vm.data = dataOrig.slice((page - 1) * count, page * count);
 					},
 					totalItemCount: 4,
-					pageSize: 2
+					pageSize: 2,
+					pageSizeOptions: [1, 2, 3]
 				},
 				sorting: {
-					onSortChange: function(page, count, sort) {
-						if(!sort) return;
+					onSortChange: function (page, count, sort) {
+						if (!sort) return;
 						sort = sort[0];
 						var descending = (sort.indexOf('desc') > -1);
-						
-						sort = sort.replace(/\s\w*/, '');						
-						
+
+						sort = sort.replace(/\s\w*/, '');
+
 						var data = _(dataOrig).sortBy(sort);
-																	
+
 						vm.data = (descending) ? data.reverse().value() : data.value();
 
-						vm.data = vm.data.slice((page-1) * count, page * count);
+						vm.data = vm.data.slice((page - 1) * count, page * count);
 					}
 				}
-			}			
+			}
 		};
 
 		init();
