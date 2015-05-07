@@ -103,6 +103,7 @@
                 function init() {
                     $scope.vm = vm;
                     $scope.options = $parse($attrs.tcOptions)($scope.$parent);
+                    $scope.options.reset = reset;
                     $scope.data = $parse($attrs.tcData)($scope.$parent);
 
                     initColumns();
@@ -115,6 +116,13 @@
                         else if ($scope.options.paging.onPageChange)
                             pageChanged();
                     }
+                }
+
+                function reset() {
+                    $scope.options.paging.currentPage = 1;
+                    $scope.options.sorting.sort = [];
+                    pageChanged();
+                    sortChanged();
                 }
 
                 function initColumns() {
