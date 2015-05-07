@@ -46,7 +46,7 @@
 				},
 				sorting: {
 					onSortChange: function (page, count, sort) {
-						if (!sort) return;
+						if (!sort || sort.length === 0) return;
 						sort = sort[0];
 						var descending = (sort.indexOf('desc') > -1);
 

@@ -175,7 +175,7 @@
 
                 function initPaging() {
                     if (!$scope.options.paging.pageSize || $scope.options.paging.pageSize < 1) {
-                        if (options.paging.pageSizeOptions) {
+                        if ($scope.options.paging.pageSizeOptions) {
                             $scope.options.paging.pageSize = options.paging.pageSizeOptions[0];
                         } else {
                             $scope.options.paging.pageSize = 20;
