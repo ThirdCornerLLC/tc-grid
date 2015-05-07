@@ -12,7 +12,7 @@
                 var children = element.children();
                 var headerHtml = "";
 
-                attrs.columns = [];
+                attrs.columns = {};
 
                 angular.forEach(children, function (child, index) {
                     var el = angular.element(child);
@@ -24,23 +24,33 @@
 
                     var sortFn = "";
                     var headerId = "";
+                    var hideFn = "";
 
                     if (colField) {
                         sortFn = " ng-click=\"vm.sort('" + colField + "')\"";
                         headerId = " id=\"" + attrs.tcOptions + "_" + colField.replace(/\./g, "") + "\"";
-                        attrs.columns.push(colField);
 
                         if (el.html() === "") {
                             el.html("{{row." + colField + "}}");
                         }
                     }
 
+                    attrs.columns[index] = {
+                        field: colField,
+                        visible: el.attr("tc-visible")
+                    };
+
                     if (ignoreClick) el.attr("ng-click", "$event.stopPropagation();");
 
                     el.addClass(colClass || "tc-style_td");
                     el.attr("tc-col-index", index + 1);
 
-                    headerHtml += "<div class=\"tc-display_th tc-style_th tc-display_sort tc-style_sort\"" + headerId + sortFn + ">" + colName + "</div>";
+                    if (el.attr("tc-visible")) {
+                        el.attr("ng-class", "{'tc-hide-col': !vm.columns['" + index + "'].visible}");
+                        hideFn = "ng-class=\"{'tc-hide-col': !vm.columns['" + index + "'].visible}\"";
+                    }
+
+                    headerHtml += "<div class=\"tc-display_th tc-style_th tc-display_sort tc-style_sort\"" + headerId + sortFn + hideFn + ">" + colName + "</div>";
 
                     if (colName) {
                         var mobileHeader = "<div class=\"tc-mobile-header\">" + colName + "</div>";
@@ -81,7 +91,7 @@
                     first: first,
                     last: last,
                     sort: sort,
-                    columns: $attrs.columns,
+                    columns: [],
                     updatePageSize: updatePageSize
                 };
 
@@ -90,14 +100,48 @@
                 function init() {
                     $scope.vm = vm;
                     $scope.options = $parse($attrs.tcOptions)($scope.$parent);
+                    $scope.options.reset = reset;
                     $scope.data = $parse($attrs.tcData)($scope.$parent);
 
+                    initColumns();
                     initOptions();
                     initWatch();
 
                     if ($scope.options) {
                         if ($scope.options.sorting.onSortChange) sortChanged();else if ($scope.options.paging.onPageChange) pageChanged();
                     }
+                }
+
+                function reset() {
+                    $scope.options.paging.currentPage = 1;
+                    $scope.options.sorting.sort = [];
+                    pageChanged();
+                    sortChanged();
+                }
+
+                function initColumns() {
+                    for (var idx in $attrs.columns) {
+                        if ($attrs.columns[idx].visible) {
+                            watchColumn(idx, $attrs.columns[idx].visible);
+                            vm.columns[idx] = {
+                                field: $attrs.columns[idx].field,
+                                visible: $parse($attrs.columns[idx].visible)($scope.$parent)
+                            };
+                        } else {
+                            vm.columns[col] = {
+                                field: $attrs.columns[col].field,
+                                visible: true
+                            };
+                        }
+                    }
+                }
+
+                function watchColumn(colIndex, visibleVar) {
+                    $scope.$parent.$watch(visibleVar, function (newVal, oldVal) {
+                        if (newVal != oldVal) {
+                            vm.columns[colIndex].visible = newVal;
+                        }
+                    });
                 }
 
                 function initOptions() {
@@ -211,7 +255,7 @@
                 }
 
                 function sort(field) {
-                    if (vm.columns.length === 0) {
+                    if (Object.getOwnPropertyNames(vm.columns).length === 0) {
                         return;
                     }var col = fetchColumn(field);
 
@@ -229,15 +273,19 @@
                 }
 
                 function cleanSortClasses() {
-                    angular.forEach(vm.columns, function (col) {
-                        var colElement = fetchColumn(col);
-                        colElement.removeClass("desc");
-                        colElement.removeClass("asc");
+                    angular.forEach(Object.keys(vm.columns), function (col) {
+                        if (vm.columns[col].field) {
+                            var colElement = fetchColumn(vm.columns[col].field);
+                            colElement.removeClass("desc");
+                            colElement.removeClass("asc");
+                        }
                     });
                 }
 
                 function fetchColumn(name) {
-                    var id = $attrs.tcOptions + "_" + name.replace(/\./g, "");
+                    if (!name) {
+                        return;
+                    }var id = $attrs.tcOptions + "_" + name.replace(/\./g, "");
                     return angular.element(document.getElementById(id));
                 }
 

@@ -104,6 +104,7 @@ function controller($scope) {
  * tc-field
  * tc-col-class
  * tc-ignore-click
+ * tc-visible
 
 ### <a name="gridOptions">Grid Options</a>
 ##### tc-grid
@@ -203,9 +204,18 @@ Ignore the row click for the individual column
 ```html
 <tc-grid tc-row-click="performAction">
     <!-- calls performAction -->
-    <tc-column><iput type="checkbox"/></tc-column>
+    <tc-column><input type="checkbox"/></tc-column>
     <!-- doesn't call performAction -->
-    <tc-column tc-ignore-click><iput type="checkbox"/></tc-column>
+    <tc-column tc-ignore-click><input type="checkbox"/></tc-column>
+</tc-grid>
+```
+
+##### tc-visible
+Toggle column visibility
+```html
+<input type="checkbox" ng-model="showCol"/>
+<tc-grid tc-row-click="performAction">
+    <tc-column tc-visible="showCol">{{row.name}}</tc-column>
 </tc-grid>
 ```
 
@@ -226,6 +236,10 @@ Ignore the row click for the individual column
           ['field dir']
   * onSortChange
       * Called when grid is sorted
+
+##### functions
+  * reset
+  	  * sets paging and sorting to page 1 and no sort
 
 ##Build
 

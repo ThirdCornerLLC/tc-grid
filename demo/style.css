@@ -5,3 +5,7 @@ html, body {
 .tc-alert {
 	border-left: 1px solid #ddd;
 }
+
+.hide-column {
+    display: none !important;
+}

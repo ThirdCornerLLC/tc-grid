@@ -353,3 +353,6 @@
 .tcGrid__scope .clearfix:after {
   clear: both;
 }
+.tcGrid__scope .tc-hide-col {
+  display: none !important;
+}
