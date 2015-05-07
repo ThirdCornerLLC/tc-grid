@@ -237,6 +237,10 @@ Toggle column visibility
   * onSortChange
       * Called when grid is sorted
 
+##### functions
+  * reset
+  	  * sets paging and sorting to page 1 and no sort
+
 ##Build
 
 navigate to directory
