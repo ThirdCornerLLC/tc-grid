@@ -22,6 +22,8 @@
                 <tc-column tc-name="Status" tc-visible="vm.show.Status">{{row.Status}}</tc-column>
                 <tc-column tc-visible="vm.show.Controls"><button ng-click="test()">Click me</button></tc-column>
             </tc-grid>
+
+			<button ng-click="vm.gridOptions.reset()">Reset Grid</button>
 		</div>
 		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.7/angular.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.min.js"></script>

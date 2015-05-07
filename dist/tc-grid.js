@@ -115,6 +115,7 @@
                 function reset() {
                     $scope.options.paging.currentPage = 1;
                     $scope.options.sorting.sort = [];
+                    cleanSortClasses();
                     pageChanged();
                     sortChanged();
                 }
