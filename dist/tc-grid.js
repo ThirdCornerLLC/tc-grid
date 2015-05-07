@@ -27,7 +27,7 @@
                     var hideFn = "";
 
                     if (colField) {
-                        sortFn = " ng-click=\"vm.sort('" + colField + "')\"";
+                        sortFn = " ng-click=\"tcGrid.sort('" + colField + "')\"";
                         headerId = " id=\"" + attrs.tcOptions + "_" + colField.replace(/\./g, "") + "\"";
 
                         if (el.html() === "") {
@@ -46,8 +46,8 @@
                     el.attr("tc-col-index", index + 1);
 
                     if (el.attr("tc-visible")) {
-                        el.attr("ng-class", "{'tc-hide-col': !vm.columns['" + index + "'].visible}");
-                        hideFn = "ng-class=\"{'tc-hide-col': !vm.columns['" + index + "'].visible}\"";
+                        el.attr("ng-class", "{'tc-hide-col': !tcGrid.columns['" + index + "'].visible}");
+                        hideFn = "ng-class=\"{'tc-hide-col': !tcGrid.columns['" + index + "'].visible}\"";
                     }
 
                     headerHtml += "<div class=\"tc-display_th tc-style_th tc-display_sort tc-style_sort\"" + headerId + sortFn + hideFn + ">" + colName + "</div>";
@@ -79,42 +79,38 @@
                 };
             },
             controller: ["$scope", "$element", "$attrs", function controller($scope, $element, $attrs) {
-                this.addColumn = addColumn;
-
                 var watchInitialized = false;
-
-                var vm = {
-                    pageCount: 1,
-                    showFooter: false,
-                    prev: prev,
-                    next: next,
-                    first: first,
-                    last: last,
-                    sort: sort,
-                    columns: [],
-                    updatePageSize: updatePageSize
-                };
+                var vm = this;
+                vm.addColumn = addColumn;
+                vm.pageCount = 1;
+                vm.showFooter = false;
+                vm.prev = prev;
+                vm.next = next;
+                vm.first = first;
+                vm.last = last;
+                vm.sort = sort;
+                vm.columns = [];
+                vm.updatePageSize = updatePageSize;
 
                 init();
 
                 function init() {
-                    $scope.vm = vm;
-                    $scope.options = $parse($attrs.tcOptions)($scope.$parent);
-                    $scope.options.reset = reset;
-                    $scope.data = $parse($attrs.tcData)($scope.$parent);
+                    vm.options = $parse($attrs.tcOptions)($scope.$parent);
+                    vm.options.reset = reset;
+                    vm.data = $parse($attrs.tcData)($scope.$parent);
 
                     initColumns();
                     initOptions();
                     initWatch();
 
-                    if ($scope.options) {
-                        if ($scope.options.sorting.onSortChange) sortChanged();else if ($scope.options.paging.onPageChange) pageChanged();
+                    if (vm.options) {
+                        if (vm.options.sorting.onSortChange) sortChanged();else if (vm.options.paging.onPageChange) pageChanged();
                     }
                 }
 
                 function reset() {
-                    $scope.options.paging.currentPage = 1;
-                    $scope.options.sorting.sort = [];
+                    vm.options.paging.currentPage = 1;
+                    vm.options.sorting.sort = [];
                     cleanSortClasses();
                     pageChanged();
                     sortChanged();
@@ -146,21 +142,21 @@
                 }
 
                 function initOptions() {
-                    if (!$scope.options) {
+                    if (!vm.options) {
                         return;
-                    }if ($scope.options.paging) initPaging();
+                    }if (vm.options.paging) initPaging();
 
-                    if ($scope.options.sorting) initSort();
+                    if (vm.options.sorting) initSort();
                 }
 
                 function initWatch() {
                     $scope.$parent.$watch($attrs.tcOptions, function (newVal) {
-                        $scope.options = newVal;
+                        vm.options = newVal;
                         pageCountWatcher();
                     }, true);
 
                     $scope.$parent.$watchCollection($attrs.tcData, function (newVal) {
-                        $scope.data = newVal;
+                        vm.data = newVal;
                     });
 
                     function pageCountWatcher() {
@@ -169,21 +165,21 @@
                             return;
                         }
 
-                        if ($scope.options && $scope.options.paging) getPageCount();
+                        if (vm.options && vm.options.paging) getPageCount();
                     }
                 }
 
                 function initPaging() {
-                    if (!$scope.options.paging.pageSize || $scope.options.paging.pageSize < 1) {
-                        if ($scope.options.paging.pageSizeOptions) {
-                            $scope.options.paging.pageSize = $scope.options.paging.pageSizeOptions[0];
+                    if (!vm.options.paging.pageSize || vm.options.paging.pageSize < 1) {
+                        if (vm.options.paging.pageSizeOptions) {
+                            vm.options.paging.pageSize = vm.options.paging.pageSizeOptions[0];
                         } else {
-                            $scope.options.paging.pageSize = 20;
+                            vm.options.paging.pageSize = 20;
                         }
                     }
-                    if (!$scope.options.paging.totalItemCount || $scope.options.paging.totalItemCount < 0) $scope.options.paging.totalItemCount = 0;
+                    if (!vm.options.paging.totalItemCount || vm.options.paging.totalItemCount < 0) vm.options.paging.totalItemCount = 0;
 
-                    if (!$scope.options.paging.currentPage || $scope.options.paging.currentPage < 1) $scope.options.paging.currentPage = 1;
+                    if (!vm.options.paging.currentPage || vm.options.paging.currentPage < 1) vm.options.paging.currentPage = 1;
 
                     getPageCount();
 
@@ -193,9 +189,9 @@
                 }
 
                 function initSort() {
-                    if (!$scope.options.sorting.sort) {
+                    if (!vm.options.sorting.sort) {
                         return;
-                    }angular.forEach($scope.options.sorting.sort, function (sortItem) {
+                    }angular.forEach(vm.options.sorting.sort, function (sortItem) {
                         var col = sortItem.split(" ")[0];
                         var dir = sortItem.split(" ")[1] || "asc";
 
@@ -205,7 +201,7 @@
                 }
 
                 function getPageCount() {
-                    vm.pageCount = $scope.options.paging.totalItemCount > 0 ? Math.ceil($scope.options.paging.totalItemCount / $scope.options.paging.pageSize) : 0;
+                    vm.pageCount = vm.options.paging.totalItemCount > 0 ? Math.ceil(vm.options.paging.totalItemCount / vm.options.paging.pageSize) : 0;
 
                     if (vm.pageCount < 1) {
                         vm.pageCount = 1;
@@ -213,44 +209,44 @@
                 }
 
                 function first() {
-                    $scope.options.paging.currentPage = 1;
+                    vm.options.paging.currentPage = 1;
                     pageChanged();
                 }
 
                 function prev() {
-                    $scope.options.paging.currentPage -= 1;
-                    if ($scope.options.paging.currentPage < 1) {
-                        $scope.options.paging.currentPage = 1;
+                    vm.options.paging.currentPage -= 1;
+                    if (vm.options.paging.currentPage < 1) {
+                        vm.options.paging.currentPage = 1;
                     }
                     pageChanged();
                 }
 
                 function next() {
-                    $scope.options.paging.currentPage += 1;
-                    if ($scope.options.paging.currentPage > vm.pageCount) {
-                        $scope.options.paging.currentPage = vm.pageCount;
+                    vm.options.paging.currentPage += 1;
+                    if (vm.options.paging.currentPage > vm.pageCount) {
+                        vm.options.paging.currentPage = vm.pageCount;
                     }
                     pageChanged();
                 }
 
                 function last() {
-                    $scope.options.paging.currentPage = vm.pageCount;
+                    vm.options.paging.currentPage = vm.pageCount;
                     pageChanged();
                 }
 
                 function pageChanged() {
-                    if ($scope.options.paging.onPageChange) {
-                        $scope.options.paging.onPageChange($scope.options.paging.currentPage, $scope.options.paging.pageSize, $scope.options.sorting.sort);
+                    if (vm.options.paging.onPageChange) {
+                        vm.options.paging.onPageChange(vm.options.paging.currentPage, vm.options.paging.pageSize, vm.options.sorting.sort);
                     }
                 }
 
                 function sortChanged() {
-                    if ($scope.options.sorting.onSortChange) {
-                        if ($scope.options.paging) {
-                            $scope.options.paging.currentPage = 1;
-                            $scope.options.sorting.onSortChange($scope.options.paging.currentPage, $scope.options.paging.pageSize, $scope.options.sorting.sort);
+                    if (vm.options.sorting.onSortChange) {
+                        if (vm.options.paging) {
+                            vm.options.paging.currentPage = 1;
+                            vm.options.sorting.onSortChange(vm.options.paging.currentPage, vm.options.paging.pageSize, vm.options.sorting.sort);
                         } else {
-                            $scope.options.sorting.onSortChange(null, null, $scope.options.sorting.sort);
+                            vm.options.sorting.onSortChange(null, null, vm.options.sorting.sort);
                         }
                     }
                 }
@@ -268,7 +264,7 @@
 
                     col.addClass(direction);
 
-                    $scope.options.sorting.sort = [field + " " + direction];
+                    vm.options.sorting.sort = [field + " " + direction];
 
                     sortChanged();
                 }
@@ -297,7 +293,8 @@
                 function updatePageSize() {
                     pageChanged();
                 }
-            }]
+            }],
+            controllerAs: "tcGrid"
         };
     }
     tcGrid.$inject = ["$parse", "$compile", "$templateCache"];
@@ -313,4 +310,4 @@
         };
     }
 })();
-angular.module("tc-grid").run(["$templateCache", function($templateCache) {$templateCache.put("tcGrid.html","<div class=\"tcGrid__scope\">\r\n    <div class=\"%GRIDCLASS%\">\r\n        <div class=\"tc-display_table tc-style_table\">\r\n            <div class=\"tc-display_thead tc-style_thead\">\r\n                <div class=\"tc-display_tr tc-style_tr\">\r\n                    %HEADER%\r\n                </div>\r\n            </div>\r\n            <div class=\"tc-display_tbody tc-style_tbody\">\r\n                <div class=\"tc-display_tr %ROWCLASS%\" ng-class=\"%ROWEXPRESSION%\" id=\"tc-row-container\" ng-repeat=\"row in data %FILTER%\" %ROWCLICK%>\r\n                    %CHILDREN%\r\n                </div>\r\n            </div>\r\n           \r\n        </div>       \r\n        \r\n        <div class=\"tc-style_pager\" ng-show=\"vm.showFooter && vm.pageCount > 1\">\r\n            <div class=\"tc-style_item-total\">\r\n                {{(options.paging.currentPage - 1) * options.paging.pageSize + 1}}\r\n                -\r\n                {{options.paging.currentPage === vm.pageCount ? options.paging.totalItemCount : options.paging.currentPage * options.paging.pageSize}}\r\n                of\r\n                {{options.paging.totalItemCount}}\r\n            </div>\r\n            <div class=\"tc-style_page-nav\">\r\n                <span class=\"tc-style_page-display\">{{options.paging.currentPage}} / {{vm.pageCount}}</span>\r\n                <select ng-if=\"options.paging.pageSizeOptions.length\"\r\n                        ng-options=\"pageSize for pageSize in options.paging.pageSizeOptions\" ng-model=\"options.paging.pageSize\" ng-change=\"vm.updatePageSize()\"></select>\r\n                <button class=\"tc-button\" ng-click=\"vm.first()\" ng-disabled=\"options.paging.currentPage === 1\"><strong>|</strong>&#9668;</button>\r\n                <button class=\"tc-button\" ng-click=\"vm.prev()\" ng-disabled=\"options.paging.currentPage === 1\">&#9668;</button>\r\n                <button class=\"tc-button\" ng-click=\"vm.next()\" ng-disabled=\"options.paging.currentPage === vm.pageCount\">&#9658;</button>\r\n                <button class=\"tc-button\" ng-click=\"vm.last()\" ng-disabled=\"options.paging.currentPage === vm.pageCount\">&#9658;<strong>|</strong></button>\r\n            </div>\r\n            <div class=\"clearfix\"></div>\r\n        </div>        \r\n    </div>    \r\n</div>");}]);
+angular.module("tc-grid").run(["$templateCache", function($templateCache) {$templateCache.put("tcGrid.html","<div class=\"tcGrid__scope\">\r\n    <div class=\"%GRIDCLASS%\">\r\n        <div class=\"tc-display_table tc-style_table\">\r\n            <div class=\"tc-display_thead tc-style_thead\">\r\n                <div class=\"tc-display_tr tc-style_tr\">\r\n                    %HEADER%\r\n                </div>\r\n            </div>\r\n            <div class=\"tc-display_tbody tc-style_tbody\">\r\n                <div class=\"tc-display_tr %ROWCLASS%\" ng-class=\"%ROWEXPRESSION%\" id=\"tc-row-container\" ng-repeat=\"row in tcGrid.data %FILTER%\" %ROWCLICK%>\r\n                    %CHILDREN%\r\n                </div>\r\n            </div>\r\n           \r\n        </div>       \r\n        \r\n        <div class=\"tc-style_pager\" ng-show=\"tcGrid.showFooter && tcGrid.pageCount > 1\">\r\n            <div class=\"tc-style_item-total\">\r\n                {{(tcGrid.options.paging.currentPage - 1) * tcGrid.options.paging.pageSize + 1}}\r\n                -\r\n                {{tcGrid.options.paging.currentPage === tcGrid.pageCount ? tcGrid.options.paging.totalItemCount : tcGrid.options.paging.currentPage * tcGrid.options.paging.pageSize}}\r\n                of\r\n                {{tcGrid.options.paging.totalItemCount}}\r\n            </div>\r\n            <div class=\"tc-style_page-nav\">\r\n                <span class=\"tc-style_page-display\">{{tcGrid.options.paging.currentPage}} / {{tcGrid.pageCount}}</span>\r\n                <select ng-if=\"tcGrid.options.paging.pageSizetcGrid.options.length\" ng-tcGrid.options=\"pageSize for pageSize in tcGrid.options.paging.pageSizetcGrid.options\" ng-model=\"tcGrid.options.paging.pageSize\" ng-change=\"tcGrid.updatePageSize()\"></select>\r\n                <button class=\"tc-button\" ng-click=\"tcGrid.first()\" ng-disabled=\"tcGrid.options.paging.currentPage === 1\"><strong>|</strong>&#9668;</button>\r\n                <button class=\"tc-button\" ng-click=\"tcGrid.prev()\" ng-disabled=\"tcGrid.options.paging.currentPage === 1\">&#9668;</button>\r\n                <button class=\"tc-button\" ng-click=\"tcGrid.next()\" ng-disabled=\"tcGrid.options.paging.currentPage === tcGrid.pageCount\">&#9658;</button>\r\n                <button class=\"tc-button\" ng-click=\"tcGrid.last()\" ng-disabled=\"tcGrid.options.paging.currentPage === tcGrid.pageCount\">&#9658;<strong>|</strong></button>\r\n            </div>\r\n            <div class=\"clearfix\"></div>\r\n        </div>        \r\n    </div>    \r\n</div>");}]);

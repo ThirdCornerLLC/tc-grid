@@ -66,6 +66,9 @@
 				Email: true,
 				Status: true,
 				Controls: true
+			},
+			test: function() {
+				alert("I'm the controller");
 			}
 		};
 
@@ -76,8 +79,6 @@
 
 			vm.data = dataOrig.slice(0, 2);
 		}
-
-		$scope.test = function(){ alert("I'm the controller"); }
 	}
 
 }());

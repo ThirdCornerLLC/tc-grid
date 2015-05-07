@@ -27,7 +27,7 @@
                     var hideFn = '';
 
                     if (colField) {
-                        sortFn = ' ng-click="vm.sort(\'' + (colField) + '\')"';
+                        sortFn = ' ng-click="tcGrid.sort(\'' + (colField) + '\')"';
                         headerId = ' id="' + attrs.tcOptions + "_" + colField.replace(/\./g, "") + '"';
 
                         if(el.html() === '') {
@@ -49,8 +49,8 @@
 
 
                     if(el.attr('tc-visible')) {
-                        el.attr('ng-class', "{'tc-hide-col': !vm.columns['"+ index +"'].visible}");
-                        hideFn = "ng-class=\"{'tc-hide-col': !vm.columns[\'"+ index +"\'].visible}\"";
+                        el.attr('ng-class', "{'tc-hide-col': !tcGrid.columns['"+ index +"'].visible}");
+                        hideFn = "ng-class=\"{'tc-hide-col': !tcGrid.columns[\'"+ index +"\'].visible}\"";
                     }
 
                     headerHtml += '<div class="tc-display_th tc-style_th tc-display_sort tc-style_sort"' + headerId + sortFn + hideFn + '>' + colName + '</div>';
@@ -82,45 +82,42 @@
                 };
             },
             controller: function($scope, $element, $attrs) {
-                this.addColumn = addColumn;
-
                 var watchInitialized = false;
+                var vm = this;
+                vm.addColumn = addColumn;
+                vm.pageCount = 1;
+                vm.showFooter = false;
+                vm.prev = prev;
+                vm.next = next;
+                vm.first = first;
+                vm.last = last;
+                vm.sort = sort;
+                vm.columns = [];
+                vm.updatePageSize = updatePageSize;
 
-                var vm = {
-                    pageCount: 1,
-                    showFooter: false,
-                    prev: prev,
-                    next: next,
-                    first: first,
-                    last: last,
-                    sort: sort,
-                    columns: [],
-                    updatePageSize: updatePageSize
-                };
 
                 init();
 
                 function init() {
-                    $scope.vm = vm;
-                    $scope.options = $parse($attrs.tcOptions)($scope.$parent);
-                    $scope.options.reset = reset;
-                    $scope.data = $parse($attrs.tcData)($scope.$parent);
+                    vm.options = $parse($attrs.tcOptions)($scope.$parent);
+                    vm.options.reset = reset;
+                    vm.data = $parse($attrs.tcData)($scope.$parent);
 
                     initColumns();
                     initOptions();
                     initWatch();
 
-                    if ($scope.options) {
-                        if ($scope.options.sorting.onSortChange)
+                    if (vm.options) {
+                        if (vm.options.sorting.onSortChange)
                             sortChanged();
-                        else if ($scope.options.paging.onPageChange)
+                        else if (vm.options.paging.onPageChange)
                             pageChanged();
                     }
                 }
 
                 function reset() {
-                    $scope.options.paging.currentPage = 1;
-                    $scope.options.sorting.sort = [];
+                    vm.options.paging.currentPage = 1;
+                    vm.options.sorting.sort = [];
                     cleanSortClasses();
                     pageChanged();
                     sortChanged();
@@ -153,23 +150,23 @@
 
 
                 function initOptions() {
-                    if (!$scope.options) return;
+                    if (!vm.options) return;
 
-                    if ($scope.options.paging)
+                    if (vm.options.paging)
                         initPaging();
 
-                    if ($scope.options.sorting)
+                    if (vm.options.sorting)
                         initSort();
                 }
 
                 function initWatch() {
                     $scope.$parent.$watch($attrs.tcOptions, function(newVal) {
-                        $scope.options = newVal;
+                        vm.options = newVal;
                         pageCountWatcher();
                     }, true);
 
                     $scope.$parent.$watchCollection($attrs.tcData, function(newVal) {
-                        $scope.data = newVal;
+                        vm.data = newVal;
                     });
 
                     function pageCountWatcher() {
@@ -178,25 +175,25 @@
                             return;
                         }
 
-                        if ($scope.options && $scope.options.paging)
+                        if (vm.options && vm.options.paging)
                             getPageCount();
                     }
                 }
 
                 function initPaging() {
-                    if (!$scope.options.paging.pageSize || $scope.options.paging.pageSize < 1)
+                    if (!vm.options.paging.pageSize || vm.options.paging.pageSize < 1)
                     {
-                        if($scope.options.paging.pageSizeOptions) {
-                            $scope.options.paging.pageSize = $scope.options.paging.pageSizeOptions[0];
+                        if(vm.options.paging.pageSizeOptions) {
+                            vm.options.paging.pageSize = vm.options.paging.pageSizeOptions[0];
                         } else {
-                            $scope.options.paging.pageSize = 20;
+                            vm.options.paging.pageSize = 20;
                         }
                     }
-                    if (!$scope.options.paging.totalItemCount || $scope.options.paging.totalItemCount < 0)
-                        $scope.options.paging.totalItemCount = 0;
+                    if (!vm.options.paging.totalItemCount || vm.options.paging.totalItemCount < 0)
+                        vm.options.paging.totalItemCount = 0;
 
-                    if (!$scope.options.paging.currentPage || $scope.options.paging.currentPage < 1)
-                        $scope.options.paging.currentPage = 1;
+                    if (!vm.options.paging.currentPage || vm.options.paging.currentPage < 1)
+                        vm.options.paging.currentPage = 1;
 
                     getPageCount();
 
@@ -206,9 +203,9 @@
                 }
 
                 function initSort() {
-                    if(!$scope.options.sorting.sort) return;
+                    if(!vm.options.sorting.sort) return;
 
-                    angular.forEach($scope.options.sorting.sort, (sortItem) => {
+                    angular.forEach(vm.options.sorting.sort, (sortItem) => {
                         var col = sortItem.split(' ')[0];
                         var dir = sortItem.split(' ')[1] || 'asc';
 
@@ -219,8 +216,8 @@
 
 
                 function getPageCount() {
-                    vm.pageCount = ($scope.options.paging.totalItemCount > 0)
-                        ? Math.ceil($scope.options.paging.totalItemCount / $scope.options.paging.pageSize)
+                    vm.pageCount = (vm.options.paging.totalItemCount > 0)
+                        ? Math.ceil(vm.options.paging.totalItemCount / vm.options.paging.pageSize)
                         : 0;
 
                     if (vm.pageCount < 1) {
@@ -229,44 +226,44 @@
                 }
 
                 function first() {
-                    $scope.options.paging.currentPage = 1;
+                    vm.options.paging.currentPage = 1;
                     pageChanged();
                 }
 
                 function prev() {
-                    $scope.options.paging.currentPage -= 1;
-                    if ($scope.options.paging.currentPage < 1) {
-                        $scope.options.paging.currentPage = 1;
+                    vm.options.paging.currentPage -= 1;
+                    if (vm.options.paging.currentPage < 1) {
+                        vm.options.paging.currentPage = 1;
                     }
                     pageChanged();
                 }
 
                 function next() {
-                    $scope.options.paging.currentPage += 1;
-                    if ($scope.options.paging.currentPage > vm.pageCount) {
-                        $scope.options.paging.currentPage = vm.pageCount;
+                    vm.options.paging.currentPage += 1;
+                    if (vm.options.paging.currentPage > vm.pageCount) {
+                        vm.options.paging.currentPage = vm.pageCount;
                     }
                     pageChanged();
                 }
 
                 function last() {
-                    $scope.options.paging.currentPage = vm.pageCount;
+                    vm.options.paging.currentPage = vm.pageCount;
                     pageChanged();
                 }
 
                 function pageChanged() {
-                    if ($scope.options.paging.onPageChange) {
-                        $scope.options.paging.onPageChange($scope.options.paging.currentPage, $scope.options.paging.pageSize, $scope.options.sorting.sort);
+                    if (vm.options.paging.onPageChange) {
+                        vm.options.paging.onPageChange(vm.options.paging.currentPage, vm.options.paging.pageSize, vm.options.sorting.sort);
                     }
                 }
 
                 function sortChanged() {
-                    if ($scope.options.sorting.onSortChange) {
-                        if ($scope.options.paging) {
-                            $scope.options.paging.currentPage = 1;
-                            $scope.options.sorting.onSortChange($scope.options.paging.currentPage, $scope.options.paging.pageSize, $scope.options.sorting.sort);
+                    if (vm.options.sorting.onSortChange) {
+                        if (vm.options.paging) {
+                            vm.options.paging.currentPage = 1;
+                            vm.options.sorting.onSortChange(vm.options.paging.currentPage, vm.options.paging.pageSize, vm.options.sorting.sort);
                         } else {
-                            $scope.options.sorting.onSortChange(null, null, $scope.options.sorting.sort);
+                            vm.options.sorting.onSortChange(null, null, vm.options.sorting.sort);
                         }
                     }
                 }
@@ -286,7 +283,7 @@
 
                     col.addClass(direction);
 
-                    $scope.options.sorting.sort = [field + ' ' + direction];
+                    vm.options.sorting.sort = [field + ' ' + direction];
 
                     sortChanged();
                 }
@@ -315,7 +312,8 @@
                 function updatePageSize() {
                     pageChanged();
                 }
-            }
+            },
+            controllerAs: 'tcGrid'
         };
 
 
