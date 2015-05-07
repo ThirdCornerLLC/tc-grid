@@ -59,6 +59,13 @@
 						vm.data = vm.data.slice((page - 1) * count, page * count);
 					}
 				}
+			},
+			show: {
+				Id: true,
+				Name: true,
+				Email: true,
+				Status: true,
+				Controls: true
 			}
 		};
 
