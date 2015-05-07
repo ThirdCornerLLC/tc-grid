@@ -135,8 +135,8 @@
                                 visible: $parse($attrs.columns[idx].visible)($scope.$parent)
                             }
                         } else {
-                            vm.columns[col] = {
-                                field: $attrs.columns[col].field,
+                            vm.columns[idx] = {
+                                field: $attrs.columns[idx].field,
                                 visible: true
                             }
                         }
