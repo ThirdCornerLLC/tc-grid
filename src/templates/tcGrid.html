@@ -24,7 +24,7 @@
             </div>
             <div class="tc-style_page-nav">
                 <span class="tc-style_page-display">{{tcGrid.options.paging.currentPage}} / {{tcGrid.pageCount}}</span>
-                <select ng-if="tcGrid.options.paging.pageSizetcGrid.options.length" ng-tcGrid.options="pageSize for pageSize in tcGrid.options.paging.pageSizetcGrid.options" ng-model="tcGrid.options.paging.pageSize" ng-change="tcGrid.updatePageSize()"></select>
+                <select ng-if="tcGrid.options.paging.pageSizeOptions.length" ng-options="pageSize for pageSize in tcGrid.options.paging.pageSizeOptions" ng-model="tcGrid.options.paging.pageSize" ng-change="tcGrid.updatePageSize()"></select>
                 <button class="tc-button" ng-click="tcGrid.first()" ng-disabled="tcGrid.options.paging.currentPage === 1"><strong>|</strong>&#9668;</button>
                 <button class="tc-button" ng-click="tcGrid.prev()" ng-disabled="tcGrid.options.paging.currentPage === 1">&#9668;</button>
                 <button class="tc-button" ng-click="tcGrid.next()" ng-disabled="tcGrid.options.paging.currentPage === tcGrid.pageCount">&#9658;</button>
