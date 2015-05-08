@@ -96,7 +96,7 @@
 
                 function init() {
                     vm.options = $parse($attrs.tcOptions)($scope.$parent);
-                    vm.options.reset = reset;
+
                     vm.data = $parse($attrs.tcData)($scope.$parent);
 
                     initColumns();
@@ -144,9 +144,11 @@
                 function initOptions() {
                     if (!vm.options) {
                         return;
-                    }if (vm.options.paging) initPaging();
+                    }vm.options.reset = reset;
 
-                    if (vm.options.sorting) initSort();
+                    if (vm.options.paging) initPaging();else vm.options.paging = {};
+
+                    if (vm.options.sorting) initSort();else vm.options.sorting = {};
                 }
 
                 function initWatch() {
