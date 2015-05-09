@@ -26,11 +26,50 @@
   @rowBorder: @rowBorder,
   @headerRowBorder: @headerRowBorder
   );
+}
 
-  .tcDisplay();
+.tcGrid_blank(
+  @border:0,
+  @pagerMarginTop: 10px,
+  @pagerColor: #FFF,
+  @headerColor: #FFF,
+  @rowColor: #FFF,
+  @rowColorAlternating: #FFF,
+  @rowColorHover: #FFF,
+  @rowBorder: 0,
+  @headerRowBorder: 0,
+  @cellPadding:0
+){
+  .tcStyle(
+  @border: @border,
+  @pagerMarginTop: @pagerMarginTop,
+  @pagerColor: @pagerColor,
+  @headerColor: @headerColor,
+  @rowColor: @rowColor,
+  @rowColorAlternating: @rowColorAlternating,
+  @rowColorHover: @rowColorHover,
+  @rowBorder: @rowBorder,
+  @headerRowBorder: @headerRowBorder,
+  @cellPadding: @cellPadding
+  );
 }
 
 .tcDisplay() {
+
+  .tc-display_pager {
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+
+    .tc-display_item-total {
+      float:left;
+    }
+
+    .tc-display_page-nav {
+      position: relative;
+      right: 5px;
+      text-align: right;
+    }
+  }
 
   @media screen and (min-width: 769px) {
     .tc-display_table{
@@ -97,6 +136,7 @@
 
 .tcStyle(
   @border:1px solid #ddd,
+  @pagerMarginTop: 0,
   @pagerColor:#ddd,
   @cellPadding:5px,
   @headerColor:#FDFDFD,
@@ -206,23 +246,12 @@
     }
   }
 
-  .tc-style_pager {
-    border-bottom-left-radius: 5px;
-    border-bottom-right-radius: 5px;
-
+  .tc-display_pager {
     background-color: @pagerColor;
     padding: @cellPadding;
+    margin-top: @pagerMarginTop;
 
-    .tc-style_item-total {
-      float:left;
-    }
-
-    .tc-style_page-nav {
-
-      position: relative;
-      right: 5px;
-      text-align: right;
-
+    .tc-display_page-nav {
       .tc-style_page-display {
         padding-right: @cellPadding;
       }
@@ -232,8 +261,11 @@
 
 
 .tcGrid__scope {
-  .tc-grid { .tcStyle(); .tcDisplay(); }
-  .tc-grid_bootstrap { .tcGrid_bootstrap(); .tcDisplay(); }
+  .tc-grid { .tcStyle();  }
+  .tc-grid_bootstrap { .tcGrid_bootstrap(); }
+  .tc-grid_blank { .tcGrid_blank(); }
+
+  .tcDisplay();
 
   .tc-button {
     padding: 3px 4px;
