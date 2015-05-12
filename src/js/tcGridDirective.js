@@ -4,11 +4,11 @@
         .directive('tcGrid', tcGrid)
         .directive('tcColumn', tcGridColumn);
 
-    function tcGrid($parse, $compile, $templateCache) {
+    function tcGrid($parse, $compile, $templateCache, $timeout) {
         return {
             restrict: 'E',
             scope: true,
-            compile: (element, attrs, transclude) => {
+            compile: (element, attrs) => {
                 var children = element.children();
                 var headerHtml = "";
 
@@ -75,14 +75,23 @@
                 templateHtml = templateHtml.replace(/%CHILDREN%/g, children.parent().html());
 
                 var template = angular.element(templateHtml);
+                var divs = template.find('div');
+                var row;
+                for(var item in divs) {
+                    if(divs[item].id == "tc-row-container") {
+                        row = divs[item];
+                        break;
+                    }
+                }
+
+                attrs.rowTemplate = row;
+
                 element.html('');
                 element.append(template);
 
                 return {
-                    pre: (scope, ele, attrs, ctrl) => {
-
-                    },
-                    post: (scope, element, attrs, ctrl) => {}
+                    pre: () => {},
+                    post: () => {}
                 };
             },
             controller: function($scope, $element, $attrs) {
@@ -92,6 +101,7 @@
                 vm.showFooter = false;
                 vm.columns = [];
                 vm.columnTemplates = $attrs.colTemplates;
+                vm.rowTemplate = $attrs.rowTemplate;
 
                 vm.addColumn = addColumn;
                 vm.prev = prev;
@@ -146,43 +156,46 @@
                 }
 
                 function orderColumns() {
-                    var table = getTable();
                     var order = [1,3,2,4,5];
-                    //for(var i = order.length-1; i > 0; i--) {
-                    //    moveColumn(order[i], 0);
-                    //}
 
-                    if(table.tbody.rows.length) {
-                        var body = angular.element('<div class="tc-display_tbody tc-style_tbody"></div>');
-                        var row = angular.element(table.tbody.rows[0]);
-                        row.html('');
-                        for(var i in order) {
-                            var col = vm.columnTemplates[order[i]-1].clone();
-                            //col = $compile(col)($scope);
-                            col.removeAttr("ng-transclude");
-                            row.append(col);
-                        }
-                        body.append(row);
-                        table.removeChild(document.querySelector('.tc-display_tbody'));
-                        table = angular.element(table);
-                        $compile(body)($scope);
-                        table.append(body);
+                    for(var i = order.length-1; i >= 0; i--) {
+                        moveColumn(order[i], 0);
                     }
+
+                    var table = getTable();
+
+                    var body = angular.element('<div class="tc-display_tbody tc-style_tbody"></div>');
+                    var row = angular.element(vm.rowTemplate);
+
+                    table.tbody.style.display = "none";
+
+                    $timeout(function() {
+                        table[0].tbody.remove();
+                    });
+
+                    row.html('');
+                    for(var i in order) {
+                        var col = vm.columnTemplates[order[i]-1];
+                        col.removeAttr("ng-transclude");
+                        row.append(col.clone());
+                    }
+                    body.append(row);
+                    $compile(body)($scope);
+                    table = angular.element(table);
+                    table.append(body);
                 }
 
                 function moveColumn(from, to) {
-                    //var table = getTable();
-                    //
-                    //for(var i in table.thead.rows) {
-                    //    var row = table.thead.rows[i];
-                    //    var removedCol = getColumnByIndex(row, from);
-                    //
-                    //    removedCol.remove();
-                    //    var refNode = row.cols[to];
-                    //    row.insertBefore(removedCol, refNode);
-                    //}
+                    var table = getTable();
 
+                    for(var i in table.thead.rows) {
+                        var row = table.thead.rows[i];
+                        var removedCol = getColumnByIndex(row, from);
 
+                        removedCol.remove();
+                        var refNode = row.cols[to];
+                        row.insertBefore(removedCol, refNode);
+                    }
                 }
 
                 function getColumnByIndex(row, index) {
@@ -196,10 +209,10 @@
 
                 function getTable() {
                     var table = document.getElementsByClassName('tc-display_table')[0];
-                    var thead, tbody;
+                    var thead, tbody, node;
 
                     for(var i in table.children) {
-                        var node = table.children[i];
+                        node = table.children[i];
                         if(node.className && node.className.indexOf("tc-display_thead") > -1) {
                             thead = node;
                         } else if(node.className && node.className.indexOf('tc-display_tbody') > -1) {
@@ -209,7 +222,7 @@
 
                     thead.rows = [];
                     for(var i in thead.children) {
-                        var node = thead.children[i];
+                        node = thead.children[i];
                         if(node.className && node.className.indexOf("tc-display_tr") > -1) {
                             thead.rows.push(node);
                         }
@@ -218,7 +231,7 @@
                     for(var i in thead.rows) {
                         thead.rows[i].cols = [];
                         for(var j in thead.rows[i].children) {
-                            var node = thead.rows[i].children[j];
+                            node = thead.rows[i].children[j];
                             if(node.className && node.className.indexOf("tc-display_th") > -1) {
                                 thead.rows[i].cols.push(node);
                             }
@@ -227,7 +240,7 @@
 
                     tbody.rows = [];
                     for(var i in tbody.children) {
-                        var node = tbody.children[i];
+                        node = tbody.children[i];
                         if(node.className && node.className.indexOf("tc-display_tr") > -1) {
                             tbody.rows.push(node);
                             break;
@@ -237,7 +250,7 @@
                     for(var i in tbody.rows) {
                         tbody.rows[i].cols = [];
                         for(var j in tbody.rows[i].children) {
-                            var node = tbody.rows[i].children[j];
+                            node = tbody.rows[i].children[j];
                             if(node.className && node.className.indexOf("tc-display_td") > -1) {
                                 tbody.rows[i].cols.push(node);
                             }
