@@ -166,7 +166,7 @@
                         table.tbody.remove();
                         row.html("");
                         for (var i in vm.options.columnDisplay) {
-                            var col = getTemplateByIndex(vm.columnTemplates, vm.options.columnDisplay[i]);
+                            var col = getTemplate(vm.columnTemplates, vm.options.columnDisplay[i]);
                             col.removeAttr("ng-transclude");
                             row.append(col.clone());
                         }
@@ -183,7 +183,7 @@
                     $timeout(function () {
                         row.html("");
                         for (var i in vm.options.columnDisplay) {
-                            var col = getTemplateByIndex(vm.headerTemplates, vm.options.columnDisplay[i]);
+                            var col = getTemplate(vm.headerTemplates, vm.options.columnDisplay[i]);
                             row.append(col);
                         }
                         $compile(head)($scope);
@@ -191,10 +191,12 @@
                     });
                 }
 
-                function getTemplateByIndex(templates, tcIndex) {
+                function getTemplate(templates, identifier) {
                     for (var i in templates) {
                         var colIndex = templates[i].attr("tc-col-index");
-                        if (colIndex == tcIndex) {
+                        var colName = templates[i].attr("tc-name");
+                        var colField = templates[i].attr("tc-field");
+                        if (colIndex == identifier || colName == identifier || colField == identifier) {
                             return templates[i];
                         }
                     }
