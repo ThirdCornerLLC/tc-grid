@@ -11,9 +11,9 @@
                     %CHILDREN%
                 </div>
             </div>
-           
-        </div>       
-        
+
+        </div>
+
         <div class="tc-display_pager" ng-show="tcGrid.showFooter && tcGrid.pageCount > 1">
             <div class="tc-display_item-total">
                 {{(tcGrid.options.paging.currentPage - 1) * tcGrid.options.paging.pageSize + 1}}
@@ -31,6 +31,8 @@
                 <button class="tc-button" ng-click="tcGrid.last()" ng-disabled="tcGrid.options.paging.currentPage === tcGrid.pageCount">&#9658;<strong>|</strong></button>
             </div>
             <div class="clearfix"></div>
-        </div>        
-    </div>    
+        </div>
+    </div>
 </div>
+
+
