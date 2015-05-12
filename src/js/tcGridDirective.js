@@ -194,6 +194,7 @@
                             row.append(col);
                         }
                         $compile(head)($scope);
+                        initSort();
                     });
                 }
 
