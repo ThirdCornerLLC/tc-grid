@@ -58,7 +58,8 @@
 
 						vm.data = vm.data.slice((page - 1) * count, page * count);
 					}
-				}
+				},
+				columnDisplay: [1,2,3,4,5]
 			},
 			show: {
 				Id: true,
@@ -69,6 +70,9 @@
 			},
 			test: function() {
 				alert("I'm the controller");
+			},
+			shuffleColumns: function() {
+				vm.gridOptions.columnDisplay = _.shuffle(vm.gridOptions.columnDisplay);
 			}
 		};
 

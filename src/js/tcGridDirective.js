@@ -160,22 +160,20 @@
 
                 function orderColumns() {
                     var table = getTable();
-
-                    var order = [1,3,2,4,5];
-                    updateHead(order, table);
-                    updateBody(order, table);
+                    updateHead(table);
+                    updateBody(table);
 
                 }
 
-                function updateBody(columnDisplay, table) {
+                function updateBody(table) {
                     var body = angular.element('<div class="tc-display_tbody tc-style_tbody"></div>');
                     var row = angular.element(vm.rowTemplate);
 
                     $timeout(function() {
                         table.tbody.remove();
                         row.html('');
-                        for(var i in columnDisplay) {
-                            var col = vm.columnTemplates[columnDisplay[i]-1];
+                        for(var i in vm.options.columnDisplay) {
+                            var col = getTemplateByIndex(vm.columnTemplates, vm.options.columnDisplay[i]);
                             col.removeAttr("ng-transclude");
                             row.append(col.clone());
                         }
@@ -186,24 +184,24 @@
                     });
                 }
 
-                function updateHead(columnDisplay, table) {
+                function updateHead(table) {
                     var head = angular.element(table.thead);
                     var row = angular.element(head.find('div')[0]);
                     $timeout(function() {
                         row.html('');
-                        for(var i in columnDisplay) {
-                            var col = vm.headerTemplates[columnDisplay[i]-1];
+                        for(var i in vm.options.columnDisplay) {
+                            var col = getTemplateByIndex(vm.headerTemplates, vm.options.columnDisplay[i]);
                             row.append(col);
                         }
                         $compile(head)($scope);
                     });
                 }
 
-                function getColumnByIndex(row, index) {
-                    for(var col in row.cols) {
-                        var colIndex = row.cols[col].getAttribute("tc-col-index");
-                        if(colIndex == index) {
-                            return row.cols[col];
+                function getTemplateByIndex(templates, tcIndex) {
+                    for(var i in templates) {
+                        var colIndex = templates[i].attr("tc-col-index");
+                        if(colIndex == tcIndex) {
+                            return templates[i];
                         }
                     }
                 }
@@ -253,8 +251,13 @@
                 }
 
                 function initWatch() {
-                    $scope.$parent.$watch($attrs.tcOptions, function(newVal) {
+                    $scope.$parent.$watch($attrs.tcOptions, function(newVal, oldVal) {
                         vm.options = newVal;
+
+                        if(newVal.columnDisplay != oldVal.columnDisplay) {
+                            orderColumns();
+                        }
+
                         pageCountWatcher();
                     }, true);
 
@@ -351,7 +354,6 @@
                 }
 
                 function sortChanged() {
-                    orderColumns();
                     if (vm.options.sorting.onSortChange) {
                         if (vm.options.paging) {
                             vm.options.paging.currentPage = 1;
