@@ -14,6 +14,7 @@
 
                 attrs.columns = {};
                 attrs.colTemplates = [];
+                attrs.headerTemplates = [];
 
                 angular.forEach(children, (child, index) => {
                     var el = angular.element(child);
@@ -54,13 +55,14 @@
                         hideFn = "ng-class=\"{'tc-hide-col': !tcGrid.columns[\'"+ index +"\'].visible}\"";
                     }
 
-                    headerHtml += '<div class="tc-display_th tc-style_th tc-display_sort tc-style_sort" tc-col-index="'+ (index + 1) +'"' + headerId + sortFn + hideFn + '>' + colName + '</div>';
+                    var header = '<div class="tc-display_th tc-style_th tc-display_sort tc-style_sort" tc-col-index="'+ (index + 1) +'"' + headerId + sortFn + hideFn + '>' + colName + '</div>';
+                    headerHtml += header;
 
                     if(colName) {
                         var mobileHeader = '<div class="tc-mobile-header">' + colName + '</div>';
                         el.prepend(mobileHeader);
                     }
-
+                    attrs.headerTemplates.push(angular.element(header));
                     attrs.colTemplates.push(el);
                 });
 
@@ -101,6 +103,7 @@
                 vm.showFooter = false;
                 vm.columns = [];
                 vm.columnTemplates = $attrs.colTemplates;
+                vm.headerTemplates = $attrs.headerTemplates;
                 vm.rowTemplate = $attrs.rowTemplate;
 
                 vm.addColumn = addColumn;
@@ -156,46 +159,44 @@
                 }
 
                 function orderColumns() {
-                    var order = [1,3,2,4,5];
-
-                    for(var i = order.length-1; i >= 0; i--) {
-                        moveColumn(order[i], 0);
-                    }
-
                     var table = getTable();
 
+                    var order = [1,3,2,4,5];
+                    updateHead(order, table);
+                    updateBody(order, table);
+
+                }
+
+                function updateBody(columnDisplay, table) {
                     var body = angular.element('<div class="tc-display_tbody tc-style_tbody"></div>');
                     var row = angular.element(vm.rowTemplate);
 
-                    table.tbody.style.display = "none";
-
                     $timeout(function() {
-                        table[0].tbody.remove();
+                        table.tbody.remove();
+                        row.html('');
+                        for(var i in columnDisplay) {
+                            var col = vm.columnTemplates[columnDisplay[i]-1];
+                            col.removeAttr("ng-transclude");
+                            row.append(col.clone());
+                        }
+                        body.append(row);
+                        $compile(body)($scope);
+                        table = angular.element(table);
+                        table.append(body);
                     });
-
-                    row.html('');
-                    for(var i in order) {
-                        var col = vm.columnTemplates[order[i]-1];
-                        col.removeAttr("ng-transclude");
-                        row.append(col.clone());
-                    }
-                    body.append(row);
-                    $compile(body)($scope);
-                    table = angular.element(table);
-                    table.append(body);
                 }
 
-                function moveColumn(from, to) {
-                    var table = getTable();
-
-                    for(var i in table.thead.rows) {
-                        var row = table.thead.rows[i];
-                        var removedCol = getColumnByIndex(row, from);
-
-                        removedCol.remove();
-                        var refNode = row.cols[to];
-                        row.insertBefore(removedCol, refNode);
-                    }
+                function updateHead(columnDisplay, table) {
+                    var head = angular.element(table.thead);
+                    var row = angular.element(head.find('div')[0]);
+                    $timeout(function() {
+                        row.html('');
+                        for(var i in columnDisplay) {
+                            var col = vm.headerTemplates[columnDisplay[i]-1];
+                            row.append(col);
+                        }
+                        $compile(head)($scope);
+                    });
                 }
 
                 function getColumnByIndex(row, index) {
@@ -217,43 +218,6 @@
                             thead = node;
                         } else if(node.className && node.className.indexOf('tc-display_tbody') > -1) {
                             tbody = node;
-                        }
-                    }
-
-                    thead.rows = [];
-                    for(var i in thead.children) {
-                        node = thead.children[i];
-                        if(node.className && node.className.indexOf("tc-display_tr") > -1) {
-                            thead.rows.push(node);
-                        }
-                    }
-
-                    for(var i in thead.rows) {
-                        thead.rows[i].cols = [];
-                        for(var j in thead.rows[i].children) {
-                            node = thead.rows[i].children[j];
-                            if(node.className && node.className.indexOf("tc-display_th") > -1) {
-                                thead.rows[i].cols.push(node);
-                            }
-                        }
-                    }
-
-                    tbody.rows = [];
-                    for(var i in tbody.children) {
-                        node = tbody.children[i];
-                        if(node.className && node.className.indexOf("tc-display_tr") > -1) {
-                            tbody.rows.push(node);
-                            break;
-                        }
-                    }
-
-                    for(var i in tbody.rows) {
-                        tbody.rows[i].cols = [];
-                        for(var j in tbody.rows[i].children) {
-                            node = tbody.rows[i].children[j];
-                            if(node.className && node.className.indexOf("tc-display_td") > -1) {
-                                tbody.rows[i].cols.push(node);
-                            }
                         }
                     }
 
