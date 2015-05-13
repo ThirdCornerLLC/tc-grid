@@ -237,6 +237,10 @@ Toggle column visibility
   * onSortChange
       * Called when grid is sorted
 
+##### column display
+  * columnDisplay
+      * array of column indexes, names, and/or fields to determine column visibility and order
+
 ##### functions
   * reset
   	  * sets paging and sorting to page 1 and no sort

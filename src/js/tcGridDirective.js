@@ -4,16 +4,17 @@
         .directive('tcGrid', tcGrid)
         .directive('tcColumn', tcGridColumn);
 
-    function tcGrid($parse, $compile, $templateCache) {
+    function tcGrid($parse, $compile, $templateCache, $timeout) {
         return {
             restrict: 'E',
             scope: true,
-            compile: (element, attrs, transclude) => {
-                var children = element.children();
+            compile: (element, attrs) => {
+                var children = element.find('tc-column');
                 var headerHtml = "";
 
                 attrs.columns = {};
                 attrs.colTemplates = [];
+                attrs.headerTemplates = [];
 
                 angular.forEach(children, (child, index) => {
                     var el = angular.element(child);
@@ -54,13 +55,14 @@
                         hideFn = "ng-class=\"{'tc-hide-col': !tcGrid.columns[\'"+ index +"\'].visible}\"";
                     }
 
-                    headerHtml += '<div class="tc-display_th tc-style_th tc-display_sort tc-style_sort" tc-col-index="'+ (index + 1) +'"' + headerId + sortFn + hideFn + '>' + colName + '</div>';
+                    var header = '<div class="tc-display_th tc-style_th tc-display_sort tc-style_sort" tc-col-index="'+ (index + 1) +'"' + headerId + sortFn + hideFn + '>' + colName + '</div>';
+                    headerHtml += header;
 
                     if(colName) {
                         var mobileHeader = '<div class="tc-mobile-header">' + colName + '</div>';
                         el.prepend(mobileHeader);
                     }
-
+                    attrs.headerTemplates.push(angular.element(header));
                     attrs.colTemplates.push(el);
                 });
 
@@ -75,14 +77,23 @@
                 templateHtml = templateHtml.replace(/%CHILDREN%/g, children.parent().html());
 
                 var template = angular.element(templateHtml);
+                var divs = template.find('div');
+                var row;
+                for(var item in divs) {
+                    if(divs[item].id == "tc-row-container") {
+                        row = divs[item];
+                        break;
+                    }
+                }
+
+                attrs.rowTemplate = row;
+
                 element.html('');
                 element.append(template);
 
                 return {
-                    pre: (scope, ele, attrs, ctrl) => {
-
-                    },
-                    post: (scope, element, attrs, ctrl) => {}
+                    pre: () => {},
+                    post: () => {}
                 };
             },
             controller: function($scope, $element, $attrs) {
@@ -92,6 +103,8 @@
                 vm.showFooter = false;
                 vm.columns = [];
                 vm.columnTemplates = $attrs.colTemplates;
+                vm.headerTemplates = $attrs.headerTemplates;
+                vm.rowTemplate = $attrs.rowTemplate;
 
                 vm.addColumn = addColumn;
                 vm.prev = prev;
@@ -147,100 +160,65 @@
 
                 function orderColumns() {
                     var table = getTable();
-                    var order = [1,3,2,4,5];
-                    //for(var i = order.length-1; i > 0; i--) {
-                    //    moveColumn(order[i], 0);
-                    //}
+                    updateHead(table);
+                    updateBody(table);
 
-                    if(table.tbody.rows.length) {
-                        var body = angular.element('<div class="tc-display_tbody tc-style_tbody"></div>');
-                        var row = angular.element(table.tbody.rows[0]);
+                }
+
+                function updateBody(table) {
+                    var body = angular.element('<div class="tc-display_tbody tc-style_tbody"></div>');
+                    var row = angular.element(vm.rowTemplate);
+
+                    $timeout(function() {
+                        table.tbody.remove();
                         row.html('');
-                        for(var i in order) {
-                            var col = vm.columnTemplates[order[i]-1].clone();
-                            //col = $compile(col)($scope);
+                        for(var i in vm.options.columnDisplay) {
+                            var col = getTemplate(vm.columnTemplates, vm.options.columnDisplay[i]);
                             col.removeAttr("ng-transclude");
-                            row.append(col);
+                            row.append(col.clone());
                         }
                         body.append(row);
-                        table.removeChild(document.querySelector('.tc-display_tbody'));
-                        table = angular.element(table);
                         $compile(body)($scope);
+                        table = angular.element(table);
                         table.append(body);
-                    }
+                    });
                 }
 
-                function moveColumn(from, to) {
-                    //var table = getTable();
-                    //
-                    //for(var i in table.thead.rows) {
-                    //    var row = table.thead.rows[i];
-                    //    var removedCol = getColumnByIndex(row, from);
-                    //
-                    //    removedCol.remove();
-                    //    var refNode = row.cols[to];
-                    //    row.insertBefore(removedCol, refNode);
-                    //}
-
-
+                function updateHead(table) {
+                    var head = angular.element(table.thead);
+                    var row = angular.element(head.find('div')[0]);
+                    $timeout(function() {
+                        row.html('');
+                        for(var i in vm.options.columnDisplay) {
+                            var col = getTemplate(vm.headerTemplates, vm.options.columnDisplay[i]);
+                            row.append(col);
+                        }
+                        $compile(head)($scope);
+                        initSort();
+                    });
                 }
 
-                function getColumnByIndex(row, index) {
-                    for(var col in row.cols) {
-                        var colIndex = row.cols[col].getAttribute("tc-col-index");
-                        if(colIndex == index) {
-                            return row.cols[col];
+                function getTemplate(templates, identifier) {
+                    for(var i in templates) {
+                        var colIndex = templates[i].attr("tc-col-index");
+                        var colName = templates[i].attr('tc-name');
+                        var colField = templates[i].attr('tc-field');
+                        if(colIndex == identifier || colName == identifier || colField == identifier) {
+                            return templates[i];
                         }
                     }
                 }
 
                 function getTable() {
                     var table = document.getElementsByClassName('tc-display_table')[0];
-                    var thead, tbody;
+                    var thead, tbody, node;
 
                     for(var i in table.children) {
-                        var node = table.children[i];
+                        node = table.children[i];
                         if(node.className && node.className.indexOf("tc-display_thead") > -1) {
                             thead = node;
                         } else if(node.className && node.className.indexOf('tc-display_tbody') > -1) {
                             tbody = node;
-                        }
-                    }
-
-                    thead.rows = [];
-                    for(var i in thead.children) {
-                        var node = thead.children[i];
-                        if(node.className && node.className.indexOf("tc-display_tr") > -1) {
-                            thead.rows.push(node);
-                        }
-                    }
-
-                    for(var i in thead.rows) {
-                        thead.rows[i].cols = [];
-                        for(var j in thead.rows[i].children) {
-                            var node = thead.rows[i].children[j];
-                            if(node.className && node.className.indexOf("tc-display_th") > -1) {
-                                thead.rows[i].cols.push(node);
-                            }
-                        }
-                    }
-
-                    tbody.rows = [];
-                    for(var i in tbody.children) {
-                        var node = tbody.children[i];
-                        if(node.className && node.className.indexOf("tc-display_tr") > -1) {
-                            tbody.rows.push(node);
-                            break;
-                        }
-                    }
-
-                    for(var i in tbody.rows) {
-                        tbody.rows[i].cols = [];
-                        for(var j in tbody.rows[i].children) {
-                            var node = tbody.rows[i].children[j];
-                            if(node.className && node.className.indexOf("tc-display_td") > -1) {
-                                tbody.rows[i].cols.push(node);
-                            }
                         }
                     }
 
@@ -273,13 +251,24 @@
                         initSort();
                     else
                         vm.options.sorting = {};
+
+                    if(vm.options.columnDisplay) {
+                        orderColumns();
+                    }
                 }
 
                 function initWatch() {
-                    $scope.$parent.$watch($attrs.tcOptions, function(newVal) {
-                        vm.options = newVal;
-                        pageCountWatcher();
-                    }, true);
+                    if($attrs.tcOptions) {
+                        $scope.$parent.$watch($attrs.tcOptions, function(newVal, oldVal) {
+                            vm.options = newVal;
+
+                            if(newVal.columnDisplay != oldVal.columnDisplay) {
+                                orderColumns();
+                            }
+
+                            pageCountWatcher();
+                        }, true);
+                    }
 
                     $scope.$parent.$watchCollection($attrs.tcData, function(newVal) {
                         vm.data = newVal;
@@ -374,7 +363,6 @@
                 }
 
                 function sortChanged() {
-                    orderColumns();
                     if (vm.options.sorting.onSortChange) {
                         if (vm.options.paging) {
                             vm.options.paging.currentPage = 1;
@@ -447,8 +435,7 @@
             require: '^tcGrid',
             replace: true,
             transclude: true,
-            template: "<div class='tc-display_td' ng-transclude></div>",
-            scope: true
+            template: "<div class='tc-display_td' ng-transclude></div>"
         };
     }
 
