@@ -9,7 +9,7 @@
             restrict: "E",
             scope: true,
             compile: function (element, attrs) {
-                var children = element.children();
+                var children = element.find("tc-column");
                 var headerHtml = "";
 
                 attrs.columns = {};
@@ -237,18 +237,24 @@
                     if (vm.options.paging) initPaging();else vm.options.paging = {};
 
                     if (vm.options.sorting) initSort();else vm.options.sorting = {};
+
+                    if (vm.options.columnDisplay) {
+                        orderColumns();
+                    }
                 }
 
                 function initWatch() {
-                    $scope.$parent.$watch($attrs.tcOptions, function (newVal, oldVal) {
-                        vm.options = newVal;
+                    if ($attrs.tcOptions) {
+                        $scope.$parent.$watch($attrs.tcOptions, function (newVal, oldVal) {
+                            vm.options = newVal;
 
-                        if (newVal.columnDisplay != oldVal.columnDisplay) {
-                            orderColumns();
-                        }
+                            if (newVal.columnDisplay != oldVal.columnDisplay) {
+                                orderColumns();
+                            }
 
-                        pageCountWatcher();
-                    }, true);
+                            pageCountWatcher();
+                        }, true);
+                    }
 
                     $scope.$parent.$watchCollection($attrs.tcData, function (newVal) {
                         vm.data = newVal;
@@ -405,8 +411,7 @@
             require: "^tcGrid",
             replace: true,
             transclude: true,
-            template: "<div class='tc-display_td' ng-transclude></div>",
-            scope: true
+            template: "<div class='tc-display_td' ng-transclude></div>"
         };
     }
 })();

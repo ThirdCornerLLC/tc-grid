@@ -9,7 +9,7 @@
             restrict: 'E',
             scope: true,
             compile: (element, attrs) => {
-                var children = element.children();
+                var children = element.find('tc-column');
                 var headerHtml = "";
 
                 attrs.columns = {};
@@ -142,7 +142,6 @@
                 }
 
                 function initColumns() {
-                    orderColumns();
                     for(var idx in $attrs.columns) {
                         if($attrs.columns[idx].visible) {
                             watchColumn(idx, $attrs.columns[idx].visible);
@@ -252,18 +251,24 @@
                         initSort();
                     else
                         vm.options.sorting = {};
+
+                    if(vm.options.columnDisplay) {
+                        orderColumns();
+                    }
                 }
 
                 function initWatch() {
-                    $scope.$parent.$watch($attrs.tcOptions, function(newVal, oldVal) {
-                        vm.options = newVal;
+                    if($attrs.tcOptions) {
+                        $scope.$parent.$watch($attrs.tcOptions, function(newVal, oldVal) {
+                            vm.options = newVal;
 
-                        if(newVal.columnDisplay != oldVal.columnDisplay) {
-                            orderColumns();
-                        }
+                            if(newVal.columnDisplay != oldVal.columnDisplay) {
+                                orderColumns();
+                            }
 
-                        pageCountWatcher();
-                    }, true);
+                            pageCountWatcher();
+                        }, true);
+                    }
 
                     $scope.$parent.$watchCollection($attrs.tcData, function(newVal) {
                         vm.data = newVal;
@@ -430,8 +435,7 @@
             require: '^tcGrid',
             replace: true,
             transclude: true,
-            template: "<div class='tc-display_td' ng-transclude></div>",
-            scope: true
+            template: "<div class='tc-display_td' ng-transclude></div>"
         };
     }
 
