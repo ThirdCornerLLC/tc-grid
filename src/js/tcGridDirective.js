@@ -142,6 +142,7 @@
                 }
 
                 function initColumns() {
+                    orderColumns();
                     for(var idx in $attrs.columns) {
                         if($attrs.columns[idx].visible) {
                             watchColumn(idx, $attrs.columns[idx].visible);
