@@ -86,7 +86,8 @@
                     }
                 }
 
-                attrs.rowTemplate = row;
+                attrs.rowTemplate = angular.element(row);
+                attrs.rowTemplate.html("");
 
                 element.html('');
                 element.append(template);
@@ -98,6 +99,9 @@
             },
             controller: function($scope, $element, $attrs) {
                 var watchInitialized = false;
+                var headTimeout;
+                var bodyTimeout;
+
                 var vm = this;
                 vm.pageCount = 1;
                 vm.showFooter = false;
@@ -116,6 +120,13 @@
                 vm.orderColumns = orderColumns;
 
                 init();
+
+                $scope.$on('$destroy', function() {
+                    if(headTimeout)
+                        $timeout.cancel(headTimeout);
+                    if(bodyTimeout)
+                        $timeout.cancel(bodyTimeout);
+                });
 
                 function init() {
                     vm.options = $parse($attrs.tcOptions)($scope.$parent);
@@ -169,9 +180,9 @@
                     var body = angular.element('<div class="tc-display_tbody tc-style_tbody"></div>');
                     var row = angular.element(vm.rowTemplate);
 
-                    $timeout(function() {
-                        table.tbody.remove();
+                    bodyTimeout = $timeout(function() {
                         row.html('');
+                        table.tbody.remove();
                         for(var i in vm.options.columnDisplay) {
                             var col = getTemplate(vm.columnTemplates, vm.options.columnDisplay[i]);
                             col.removeAttr("ng-transclude");
@@ -187,7 +198,7 @@
                 function updateHead(table) {
                     var head = angular.element(table.thead);
                     var row = angular.element(head.find('div')[0]);
-                    $timeout(function() {
+                    headTimeout = $timeout(function() {
                         row.html('');
                         for(var i in vm.options.columnDisplay) {
                             var col = getTemplate(vm.headerTemplates, vm.options.columnDisplay[i]);
@@ -251,10 +262,6 @@
                         initSort();
                     else
                         vm.options.sorting = {};
-
-                    if(vm.options.columnDisplay) {
-                        orderColumns();
-                    }
                 }
 
                 function initWatch() {
