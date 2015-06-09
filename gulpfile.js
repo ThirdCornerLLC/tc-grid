@@ -6,6 +6,9 @@ var babel = require('gulp-babel');
 var ngAnnotate = require('gulp-ng-annotate');
 var addSrc = require('gulp-add-src');
 var filter = require('gulp-filter');
+var uglify = require('gulp-uglify');
+var minifyCss = require('gulp-minify-css');
+var rename = require('gulp-rename');
 var pipe = require('multipipe');
 
 var config = {
@@ -27,7 +30,10 @@ gulp.task('build:css', function() {
         gulp.src(config.src.less),
         concat(config.dist.less),
         less(),
-        gulp.dest(config.dist.base)
+        gulp.dest(config.dist.base),
+		minifyCss(),
+        rename({ suffix: '.min' }),
+		gulp.dest(config.dist.base)
     );
 });
 
@@ -43,7 +49,10 @@ gulp.task('build:js', function() {
         templateCache({module: config.dist.angularModule}),
         htmlFilter.restore(),
         concat(config.dist.bundle),
-        gulp.dest(config.dist.base)
+        gulp.dest(config.dist.base),
+		uglify({ mangle: true, warnings: false }),
+        rename({ suffix: '.min' }),
+		gulp.dest(config.dist.base)
     );
 });
 
