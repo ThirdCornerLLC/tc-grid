@@ -397,6 +397,13 @@
                 }
 
                 function updatePageSize() {
+                    getPageCount();
+                    if (vm.options.paging.currentPage > vm.pageCount) {
+                        vm.options.paging.currentPage = vm.pageCount;
+                    } else if (vm.options.paging.currentPage < 0) {
+                        vm.options.paging.currentPage = 0;
+                    }
+
                     pageChanged();
                 }
 
