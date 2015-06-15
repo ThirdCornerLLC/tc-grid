@@ -176,7 +176,7 @@
   border-bottom: 0;
 }
 .tcGrid__scope .tc-grid_blank .tc-style_table .tc-display_thead .tc-style_tr {
-  background-color: #ffffff;
+  background-color: inherit;
 }
 .tcGrid__scope .tc-grid_blank .tc-style_table .tc-display_thead .tc-style_th {
   font-weight: bold;
@@ -208,13 +208,13 @@
   content: "\25B2";
 }
 .tcGrid__scope .tc-grid_blank .tc-style_table .tc-display_tbody .tc-style_tr:nth-child(odd) {
-  background-color: #ffffff;
+  background-color: inherit;
 }
 .tcGrid__scope .tc-grid_blank .tc-style_table .tc-display_tbody .tc-style_tr:nth-child(even) {
-  background-color: #ffffff;
+  background-color: inherit;
 }
 .tcGrid__scope .tc-grid_blank .tc-style_table .tc-display_tbody .tc-style_tr[ng-click]:hover {
-  background-color: #ffffff;
+  background-color: inherit;
 }
 .tcGrid__scope .tc-grid_blank .tc-style_table .tc-display_tbody .tc-display_tr .tc-mobile-header {
   padding-right: 5px;
@@ -246,7 +246,7 @@
   }
 }
 .tcGrid__scope .tc-grid_blank .tc-display_pager {
-  background-color: #ffffff;
+  background-color: inherit;
   padding: 0;
   margin-top: 10px;
 }
