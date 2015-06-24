@@ -55,7 +55,7 @@
                         hideFn = "ng-class=\"{'tc-hide-col': !tcGrid.columns[\'"+ index +"\'].visible}\"";
                     }
 
-                    var header = '<div class="tc-display_th tc-style_th tc-display_sort tc-style_sort" tc-col-index="'+ (index + 1) +'"' + headerId + sortFn + hideFn + '>' + colName + '</div>';
+                    var header = '<div class="tc-display_th tc-style_th" tc-col-index="'+ (index + 1) +'"' + headerId + sortFn + hideFn + '>' + colName + '<span class="tc-display_sort tc-style_sort"></span></div>';
                     headerHtml += header;
 
                     if(colName) {
@@ -192,6 +192,7 @@
                         $compile(body)($scope);
                         table = angular.element(table);
                         table.append(body);
+                        $scope.$apply();
                     });
                 }
 
@@ -269,7 +270,9 @@
                         $scope.$parent.$watch($attrs.tcOptions, function(newVal, oldVal) {
                             vm.options = newVal;
 
-                            if(newVal.columnDisplay != oldVal.columnDisplay) {
+                            if(newVal == oldVal && newVal.columnDisplay) {
+                                orderColumns();
+                            } else if(newVal.columnDisplay != oldVal.columnDisplay) {
                                 orderColumns();
                             }
 
@@ -413,7 +416,14 @@
                 function fetchColumn(name) {
                     if(!name) return;
                     var id = $attrs.tcOptions + '_' + name.replace(/\./g, '');
-                    return angular.element(document.getElementById(id));
+                    var col = document.getElementById(id);
+                    var children = col.childNodes;
+                    for(var s in children) {
+                        if(children[s].className && children[s].className.indexOf("tc-display_sort") > -1) {
+                            return angular.element(children[s]);
+                        }
+                    }
+                    return null;
                 }
 
                 function addColumn(name) {
