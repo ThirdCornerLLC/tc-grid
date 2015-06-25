@@ -169,22 +169,22 @@
                     }
                 }
 
-                function orderColumns() {
+                function orderColumns(columnOrder) {
                     var table = getTable();
-                    updateHead(table);
-                    updateBody(table);
+                    updateHead(table, columnOrder);
+                    updateBody(table, columnOrder);
 
                 }
 
-                function updateBody(table) {
+                function updateBody(table, columnOrder) {
                     var body = angular.element('<div class="tc-display_tbody tc-style_tbody"></div>');
                     var row = angular.element(vm.rowTemplate);
 
                     bodyTimeout = $timeout(function() {
                         row.html('');
                         table.tbody.remove();
-                        for(var i in vm.options.columnDisplay) {
-                            var col = getTemplate(vm.columnTemplates, vm.options.columnDisplay[i]);
+                        for(var i in columnOrder) {
+                            var col = getTemplate(vm.columnTemplates, columnOrder[i]);
                             col.removeAttr("ng-transclude");
                             row.append(col.clone());
                         }
@@ -196,13 +196,13 @@
                     });
                 }
 
-                function updateHead(table) {
+                function updateHead(table, columnOrder) {
                     var head = angular.element(table.thead);
                     var row = angular.element(head.find('div')[0]);
                     headTimeout = $timeout(function() {
                         row.html('');
-                        for(var i in vm.options.columnDisplay) {
-                            var col = getTemplate(vm.headerTemplates, vm.options.columnDisplay[i]);
+                        for(var i in columnOrder) {
+                            var col = getTemplate(vm.headerTemplates, columnOrder[i]);
                             row.append(col);
                         }
                         $compile(head)($scope);
@@ -271,9 +271,15 @@
                             vm.options = newVal;
 
                             if(newVal == oldVal && newVal.columnDisplay) {
-                                orderColumns();
+                                orderColumns(vm.options.columnDisplay);
+                            } else if(newVal == oldVal && !newVal.columnDisplay) {
+                                var colDisplay = [];
+                                for(var i = 0; i < vm.columns.length; i++) {
+                                    colDisplay.push(i+1);
+                                }
+                                orderColumns(colDisplay);
                             } else if(newVal.columnDisplay != oldVal.columnDisplay) {
-                                orderColumns();
+                                orderColumns(vm.options.columnDisplay);
                             }
 
                             pageCountWatcher();
