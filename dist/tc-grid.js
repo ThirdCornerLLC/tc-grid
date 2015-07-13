@@ -60,7 +60,7 @@
                         el.prepend(mobileHeader);
                     }
                     attrs.headerTemplates.push(angular.element(header));
-                    attrs.colTemplates.push(el);
+                    attrs.colTemplates.push(el.clone());
                 });
 
                 var templateHtml = $templateCache.get("tcGrid.html");
@@ -173,7 +173,7 @@
 
                     bodyTimeout = $timeout(function () {
                         row.html("");
-                        table.tbody.remove();
+                        table.tbody.parentNode.removeChild(table.tbody);
                         for (var i in columnOrder) {
                             var col = getTemplate(vm.columnTemplates, columnOrder[i]);
                             col.removeAttr("ng-transclude");
@@ -194,7 +194,7 @@
                         row.html("");
                         for (var i in columnOrder) {
                             var col = getTemplate(vm.headerTemplates, columnOrder[i]);
-                            row.append(col);
+                            row.append(col.clone());
                         }
                         $compile(head)($scope);
                         initSort();
@@ -222,6 +222,7 @@
                             thead = node;
                         } else if (node.className && node.className.indexOf("tc-display_tbody") > -1) {
                             tbody = node;
+                            tbody.parent = node.parentNode;
                         }
                     }
 
@@ -400,11 +401,13 @@
                     }var id = $attrs.tcOptions + "_" + name.replace(/\./g, "");
                     var col = document.getElementById(id);
                     var children = col.childNodes;
+
                     for (var s in children) {
                         if (children[s].className && children[s].className.indexOf("tc-display_sort") > -1) {
                             return angular.element(children[s]);
                         }
                     }
+
                     return null;
                 }
 
