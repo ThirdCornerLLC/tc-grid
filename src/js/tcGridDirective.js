@@ -137,7 +137,9 @@
                     initWatch();
 
                     if (vm.options) {
-                        if (vm.options.sorting.onSortChange)
+                        if (vm.options.onLoad && typeof vm.options.onLoad === 'function')
+                            vm.options.onLoad();
+                        else if (vm.options.sorting.onSortChange)
                             sortChanged();
                         else if (vm.options.paging.onPageChange)
                             pageChanged();
