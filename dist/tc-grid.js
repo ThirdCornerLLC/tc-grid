@@ -312,7 +312,9 @@
                         var dir = sortItem.split(" ")[1] || "asc";
 
                         var column = fetchColumn(col);
-                        column.addClass(dir.toLowerCase());
+                        if (column) {
+                            column.addClass(dir.toLowerCase());
+                        }
                     });
                 }
 
@@ -372,17 +374,19 @@
                         return;
                     }var col = fetchColumn(field);
 
-                    var direction = "asc";
+                    if (col) {
+                        var direction = "asc";
 
-                    if (col.hasClass("asc")) direction = "desc";
+                        if (col.hasClass("asc")) direction = "desc";
 
-                    cleanSortClasses();
+                        cleanSortClasses();
 
-                    col.addClass(direction);
+                        col.addClass(direction);
 
-                    vm.options.sorting.sort = [field + " " + direction];
+                        vm.options.sorting.sort = [field + " " + direction];
 
-                    sortChanged();
+                        sortChanged();
+                    }
                 }
 
                 function cleanSortClasses() {
@@ -400,11 +404,14 @@
                         return;
                     }var id = $attrs.tcOptions + "_" + name.replace(/\./g, "");
                     var col = document.getElementById(id);
-                    var children = col.childNodes;
 
-                    for (var s in children) {
-                        if (children[s].className && children[s].className.indexOf("tc-display_sort") > -1) {
-                            return angular.element(children[s]);
+                    if (col) {
+                        var children = col.childNodes;
+
+                        for (var s in children) {
+                            if (children[s].className && children[s].className.indexOf("tc-display_sort") > -1) {
+                                return angular.element(children[s]);
+                            }
                         }
                     }
 
@@ -446,4 +453,4 @@
         };
     }
 })();
-angular.module("tc-grid").run(["$templateCache", function($templateCache) {$templateCache.put("tcGrid.html","<div class=\"tcGrid__scope\">\n    <div class=\"%GRIDCLASS%\">\n        <div class=\"tc-display_table tc-style_table\">\n            <div class=\"tc-display_thead tc-style_thead\">\n                <div class=\"tc-display_tr tc-style_tr\">\n                    %HEADER%\n                </div>\n            </div>\n            <div class=\"tc-display_tbody tc-style_tbody\">\n                <div class=\"tc-display_tr %ROWCLASS%\" ng-class=\"%ROWEXPRESSION%\" id=\"tc-row-container\" ng-repeat=\"row in tcGrid.data %FILTER%\" %ROWCLICK%>\n                    %CHILDREN%\n                </div>\n            </div>\n\n        </div>\n\n        <div class=\"tc-display_pager\" ng-show=\"tcGrid.showFooter && tcGrid.pageCount > 1\">\n            <div class=\"tc-display_item-total\">\n                {{(tcGrid.options.paging.currentPage - 1) * tcGrid.options.paging.pageSize + 1}}\n                -\n                {{tcGrid.options.paging.currentPage === tcGrid.pageCount ? tcGrid.options.paging.totalItemCount : tcGrid.options.paging.currentPage * tcGrid.options.paging.pageSize}}\n                of\n                {{tcGrid.options.paging.totalItemCount}}\n            </div>\n            <div class=\"tc-display_page-nav\">\n                <span class=\"tc-style_page-display\">{{tcGrid.options.paging.currentPage}} / {{tcGrid.pageCount}}</span>\n                <select ng-if=\"tcGrid.options.paging.pageSizeOptions.length\" ng-options=\"pageSize for pageSize in tcGrid.options.paging.pageSizeOptions\" ng-model=\"tcGrid.options.paging.pageSize\" ng-change=\"tcGrid.updatePageSize()\"></select>\n                <button class=\"tc-button\" ng-click=\"tcGrid.first()\" ng-disabled=\"tcGrid.options.paging.currentPage === 1\"><strong>|</strong>&#9668;</button>\n                <button class=\"tc-button\" ng-click=\"tcGrid.prev()\" ng-disabled=\"tcGrid.options.paging.currentPage === 1\">&#9668;</button>\n                <button class=\"tc-button\" ng-click=\"tcGrid.next()\" ng-disabled=\"tcGrid.options.paging.currentPage === tcGrid.pageCount\">&#9658;</button>\n                <button class=\"tc-button\" ng-click=\"tcGrid.last()\" ng-disabled=\"tcGrid.options.paging.currentPage === tcGrid.pageCount\">&#9658;<strong>|</strong></button>\n            </div>\n            <div class=\"clearfix\"></div>\n        </div>\n    </div>\n</div>\n\n\n");}]);
+angular.module("tc-grid").run(["$templateCache", function($templateCache) {$templateCache.put("tcGrid.html","<div class=\"tcGrid__scope\">\r\n    <div class=\"%GRIDCLASS%\">\r\n        <div class=\"tc-display_table tc-style_table\">\r\n            <div class=\"tc-display_thead tc-style_thead\">\r\n                <div class=\"tc-display_tr tc-style_tr\">\r\n                    %HEADER%\r\n                </div>\r\n            </div>\r\n            <div class=\"tc-display_tbody tc-style_tbody\">\r\n                <div class=\"tc-display_tr %ROWCLASS%\" ng-class=\"%ROWEXPRESSION%\" id=\"tc-row-container\" ng-repeat=\"row in tcGrid.data %FILTER%\" %ROWCLICK%>\r\n                    %CHILDREN%\r\n                </div>\r\n            </div>\r\n\r\n        </div>\r\n\r\n        <div class=\"tc-display_pager\" ng-show=\"tcGrid.showFooter && tcGrid.pageCount > 1\">\r\n            <div class=\"tc-display_item-total\">\r\n                {{(tcGrid.options.paging.currentPage - 1) * tcGrid.options.paging.pageSize + 1}}\r\n                -\r\n                {{tcGrid.options.paging.currentPage === tcGrid.pageCount ? tcGrid.options.paging.totalItemCount : tcGrid.options.paging.currentPage * tcGrid.options.paging.pageSize}}\r\n                of\r\n                {{tcGrid.options.paging.totalItemCount}}\r\n            </div>\r\n            <div class=\"tc-display_page-nav\">\r\n                <span class=\"tc-style_page-display\">{{tcGrid.options.paging.currentPage}} / {{tcGrid.pageCount}}</span>\r\n                <select ng-if=\"tcGrid.options.paging.pageSizeOptions.length\" ng-options=\"pageSize for pageSize in tcGrid.options.paging.pageSizeOptions\" ng-model=\"tcGrid.options.paging.pageSize\" ng-change=\"tcGrid.updatePageSize()\"></select>\r\n                <button class=\"tc-button\" ng-click=\"tcGrid.first()\" ng-disabled=\"tcGrid.options.paging.currentPage === 1\"><strong>|</strong>&#9668;</button>\r\n                <button class=\"tc-button\" ng-click=\"tcGrid.prev()\" ng-disabled=\"tcGrid.options.paging.currentPage === 1\">&#9668;</button>\r\n                <button class=\"tc-button\" ng-click=\"tcGrid.next()\" ng-disabled=\"tcGrid.options.paging.currentPage === tcGrid.pageCount\">&#9658;</button>\r\n                <button class=\"tc-button\" ng-click=\"tcGrid.last()\" ng-disabled=\"tcGrid.options.paging.currentPage === tcGrid.pageCount\">&#9658;<strong>|</strong></button>\r\n            </div>\r\n            <div class=\"clearfix\"></div>\r\n        </div>\r\n    </div>\r\n</div>\r\n\r\n\r\n");}]);

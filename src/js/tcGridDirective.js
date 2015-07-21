@@ -333,7 +333,9 @@
                         var dir = sortItem.split(' ')[1] || 'asc';
 
                         var column = fetchColumn(col);
-                        column.addClass(dir.toLowerCase());
+                        if(column) {
+                            column.addClass(dir.toLowerCase());
+                        }
                     });
                 }
 
@@ -397,18 +399,20 @@
 
                     var col = fetchColumn(field);
 
-                    var direction = 'asc';
+                    if(col) {
+                        var direction = 'asc';
 
-                    if (col.hasClass('asc'))
-                        direction = 'desc';
+                        if (col.hasClass('asc'))
+                            direction = 'desc';
 
-                    cleanSortClasses();
+                        cleanSortClasses();
 
-                    col.addClass(direction);
+                        col.addClass(direction);
 
-                    vm.options.sorting.sort = [field + ' ' + direction];
+                        vm.options.sorting.sort = [field + ' ' + direction];
 
-                    sortChanged();
+                        sortChanged();
+                    }
                 }
 
                 function cleanSortClasses() {
@@ -425,11 +429,14 @@
                     if(!name) return;
                     var id = $attrs.tcOptions + '_' + name.replace(/\./g, '');
                     var col = document.getElementById(id);
-                    var children = col.childNodes;
 
-                    for(var s in children) {
-                        if(children[s].className && children[s].className.indexOf("tc-display_sort") > -1) {
-                            return angular.element(children[s]);
+                    if(col) {
+                        var children = col.childNodes;
+
+                        for(var s in children) {
+                            if(children[s].className && children[s].className.indexOf("tc-display_sort") > -1) {
+                                return angular.element(children[s]);
+                            }
                         }
                     }
 
