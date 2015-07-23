@@ -419,8 +419,10 @@
                     angular.forEach(Object.keys(vm.columns), col => {
                         if(vm.columns[col].field) {
                             var colElement = fetchColumn(vm.columns[col].field);
-                            colElement.removeClass('desc');
-                            colElement.removeClass('asc');
+                            if(colElement) {
+                                colElement.removeClass('desc');
+                                colElement.removeClass('asc');
+                            }
                         }
                     });
                 }
