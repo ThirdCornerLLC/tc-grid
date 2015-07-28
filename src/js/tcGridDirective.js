@@ -255,6 +255,11 @@
                     if (!vm.options) return;
 
                     vm.options.reset = reset;
+                    vm.options.prev = prev;
+                    vm.options.next = next;
+                    vm.options.first = first;
+                    vm.options.last = last;
+                    vm.options.sort = sort;
 
                     if (vm.options.paging)
                         initPaging();
@@ -460,11 +465,6 @@
 
                     pageChanged();
                 }
-
-                function test() {
-                    console.log('test');
-                }
-                this.test = test;
             },
             controllerAs: 'tcGrid'
         };

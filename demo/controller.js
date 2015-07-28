@@ -32,7 +32,6 @@
             }
         ];
 
-
         var vm = {
             data: [],
             gridOptions: {
@@ -66,6 +65,12 @@
                 Email: true,
                 Status: true,
                 Controls: true
+            },
+            prev: function() {
+                vm.gridOptions.prev();
+            },
+            next: function() {
+                vm.gridOptions.next();
             },
             test: function() {
                 alert("I'm the controller");
