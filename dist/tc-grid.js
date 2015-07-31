@@ -329,6 +329,8 @@
                     if (vm.pageCount < 1) {
                         vm.pageCount = 1;
                     }
+
+                    vm.options.paging.pageCount = vm.pageCount;
                 }
 
                 function first() {
