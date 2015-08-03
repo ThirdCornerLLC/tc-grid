@@ -183,7 +183,9 @@
 
                     bodyTimeout = $timeout(function() {
                         row.html('');
-                        table.tbody.parentNode.removeChild(table.tbody);
+                        if(table.tbody && table.tbody.parentNode) {
+                            table.tbody.parentNode.removeChild(table.tbody);
+                        }
                         for(var i in columnOrder) {
                             var col = getTemplate(vm.columnTemplates, columnOrder[i]);
                             col.removeAttr("ng-transclude");
