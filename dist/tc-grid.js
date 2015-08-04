@@ -172,10 +172,14 @@
                     var row = angular.element(vm.rowTemplate);
 
                     bodyTimeout = $timeout(function () {
-                        row.html("");
                         if (table.tbody && table.tbody.parentNode) {
                             table.tbody.parentNode.removeChild(table.tbody);
+                        } else {
+                            return;
                         }
+
+                        row.html("");
+
                         for (var i in columnOrder) {
                             var col = getTemplate(vm.columnTemplates, columnOrder[i]);
                             col.removeAttr("ng-transclude");
@@ -216,10 +220,11 @@
 
                 function getTable() {
                     var table = document.getElementsByClassName("tc-display_table")[0];
+                    var tableChildren = Array.prototype.slice.call(table.children);
                     var thead, tbody, node;
 
-                    for (var i in table.children) {
-                        node = table.children[i];
+                    for (var i in tableChildren) {
+                        node = tableChildren[i];
                         if (node.className && node.className.indexOf("tc-display_thead") > -1) {
                             thead = node;
                         } else if (node.className && node.className.indexOf("tc-display_tbody") > -1) {
