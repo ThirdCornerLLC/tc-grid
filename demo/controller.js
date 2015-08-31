@@ -2,9 +2,11 @@
 
     var app = angular.module('MyApp', ['tc-grid']);
 
-    app.controller('MyController', ['$scope', MyController]);
+    app.controller('MyController', ['$scope', '$timeout', MyController]);
 
-    function MyController($scope) {
+    function MyController($scope, $timeout) {
+        var loadingTime = 0;
+
         var dataOrig =  [
             {
                 Id: 1,
@@ -37,7 +39,10 @@
             gridOptions: {
                 paging: {
                     onPageChange: function (page, count, sort) {
-                        vm.data = dataOrig.slice((page - 1) * count, page * count);
+                        vm.data = [];
+                        $timeout(function() {
+                            vm.data = dataOrig.slice((page - 1) * count, page * count);
+                        }, loadingTime);
                     },
                     totalItemCount: 4,
                     pageSize: 2,
@@ -53,8 +58,13 @@
 
                         var data = _(dataOrig).sortBy(sort);
 
-                        vm.data = (descending) ? data.reverse().value() : data.value();
-                        vm.data = vm.data.slice((page - 1) * count, page * count);
+                        vm.data = [];
+                        $timeout(function() {
+                            vm.data = (descending) ? data.reverse().value() : data.value();
+                            vm.data = vm.data.slice((page - 1) * count, page * count);
+                        }, loadingTime);
+
+
                     }
                 },
                 columnDisplay: [1,2,3,4,5]
@@ -84,7 +94,12 @@
 
         function init() {
             $scope.vm = vm;
-            vm.data = dataOrig.slice(0, 2);
+            vm.data = [];
+
+            //simulate loading from server
+            $timeout(function() {
+                vm.data = dataOrig.slice(0, 2);
+            }, loadingTime);
         }
     }
 

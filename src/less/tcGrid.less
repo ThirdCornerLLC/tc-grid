@@ -54,7 +54,9 @@
   );
 }
 
-.tcDisplay() {
+.tcDisplay(
+  @mobileBreakpoint: 768px
+) {
 
   .tc-display_pager {
     border-bottom-left-radius: 5px;
@@ -71,7 +73,31 @@
     }
   }
 
-  @media screen and (min-width: 769px) {
+  .tc-display_table{
+    display: block;
+
+    .tc-display_thead {
+      display: none;
+    }
+
+    .tc-display_tbody {
+      display: block;
+
+      .tc-display_tr{
+        display: block;
+
+        .tc-mobile-header {
+          display: inline-block;
+        }
+
+        .tc-display_td {
+          display: block;
+        }
+      }
+    }
+  }
+
+  @media screen and (min-width: @mobileBreakpoint) {
     .tc-display_table{
       display: table;
       width: 100%;
@@ -105,32 +131,6 @@
       }
     }
   }
-
-  @media screen and (max-width: 768px) {
-    .tc-display_table{
-      display: block;
-
-      .tc-display_thead {
-        display: none;
-      }
-
-      .tc-display_tbody {
-        display: block;
-
-        .tc-display_tr{
-          display: block;
-
-          .tc-mobile-header {
-            display: inline-block;
-          }
-
-          .tc-display_td {
-            display: block;
-          }
-        }
-      }
-    }
-  }
 }
 
 
@@ -145,7 +145,8 @@
   @rowColorHover:#f0f0f0,
   @rowBorder: none,
   @headerRowBorder:1px solid #ddd,
-  @fontSize:inherit
+  @fontSize:inherit,
+  @mobileBreakpoint: 768px
 ){
   font-size: @fontSize;
 
@@ -193,6 +194,9 @@
 
     .tc-display_tbody {
       .tc-style_tr{
+        color: inherit;
+        text-decoration: none;
+
         &:nth-child(odd) {
           background-color: @rowColor;
         }
@@ -207,6 +211,9 @@
       }
       .tc-display_tr {
 
+        &:first-child {
+          border-top: @border;
+        }
 
         .tc-mobile-header {
           padding-right: 5px;
@@ -217,29 +224,20 @@
         .tc-style_td {
           border-left: @border;
           border-top: @rowBorder;
+          border-right: @border;
           padding: @cellPadding;
 
-          @media screen and (min-width: 769px) {
+          @media screen and (min-width: @mobileBreakpoint) {
             &:last-child {
               border-right: @border;
             }
           }
-
-          @media screen and (max-width: 768px) {
-            border-right: @border;
-          }
         }
 
 
-        @media screen and (min-width: 769px) {
+        @media screen and (min-width: @mobileBreakpoint) {
           &:first-child {
             border-top: none;
-          }
-        }
-
-        @media screen and (max-width: 768px) {
-          &:first-child {
-            border-top: @border;
           }
         }
       }

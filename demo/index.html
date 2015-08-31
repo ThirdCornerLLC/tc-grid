@@ -14,7 +14,7 @@
 			<input type="checkbox" ng-model="vm.show.Email"/> My Email<br/>
 			<input type="checkbox" ng-model="vm.show.Controls"/> Controls<br/>
 
-            <tc-grid tc-data="vm.data" tc-options="vm.gridOptions">
+            <tc-grid tc-data="vm.data" tc-options="vm.gridOptions" tc-row-link="http://google.com">
                 <tc-column tc-field="Id" tc-visible="vm.show.Id"></tc-column>
                 <tc-column tc-field="Name" tc-visible="vm.show.Name"></tc-column>
                 <tc-column tc-name="<span style='color: red'>My Email</span>" tc-field="Email" tc-visible="vm.show.Email"></tc-column>
