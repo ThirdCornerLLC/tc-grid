@@ -71,17 +71,18 @@
                 templateHtml = templateHtml.replace(/%HEADER%/g, headerHtml);
                 templateHtml = templateHtml.replace(/%GRIDCLASS%/g, attrs.tcGridClass || 'tc-grid');
                 templateHtml = templateHtml.replace(/%ROWCLICK%/g, attrs.tcRowClick ? 'ng-click="' + attrs.tcRowClick + '"' : "");
+                templateHtml = templateHtml.replace(/%ROWLINK%/g, attrs.tcRowLink ? ' ng-href="' + attrs.tcRowLink + '"' : "");
                 templateHtml = templateHtml.replace(/%FILTER%/g, attrs.tcGridFilter ? ' | filter: ' + attrs.tcGridFilter : "");
                 templateHtml = templateHtml.replace(/%ROWCLASS%/g, attrs.tcRowClass ? '' : 'tc-style_tr');
                 templateHtml = templateHtml.replace(/%ROWEXPRESSION%/g, attrs.tcRowClass || '');
                 templateHtml = templateHtml.replace(/%CHILDREN%/g, children.parent().html());
 
                 var template = angular.element(templateHtml);
-                var divs = template.find('div');
+                var rows = template.find('a');
                 var row;
-                for(var item in divs) {
-                    if(divs[item].id == "tc-row-container") {
-                        row = divs[item];
+                for(var item in rows) {
+                    if(rows[item].id == "tc-row-container") {
+                        row = rows[item];
                         break;
                     }
                 }

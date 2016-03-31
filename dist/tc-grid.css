@@ -37,6 +37,10 @@
 .tcGrid__scope .tc-grid .tc-style_table .tc-display_thead .tc-style_sort.asc:after {
   content: "\25B2";
 }
+.tcGrid__scope .tc-grid .tc-style_table .tc-display_tbody .tc-style_tr {
+  color: inherit;
+  text-decoration: none;
+}
 .tcGrid__scope .tc-grid .tc-style_table .tc-display_tbody .tc-style_tr:nth-child(odd) {
   background-color: #f5f5f5;
 }
@@ -122,6 +126,10 @@
 .tcGrid__scope .tc-grid_bootstrap .tc-style_table .tc-display_thead .tc-style_sort.asc:after {
   content: "\25B2";
 }
+.tcGrid__scope .tc-grid_bootstrap .tc-style_table .tc-display_tbody .tc-style_tr {
+  color: inherit;
+  text-decoration: none;
+}
 .tcGrid__scope .tc-grid_bootstrap .tc-style_table .tc-display_tbody .tc-style_tr:nth-child(odd) {
   background-color: #ffffff;
 }
@@ -206,6 +214,10 @@
 }
 .tcGrid__scope .tc-grid_blank .tc-style_table .tc-display_thead .tc-style_sort.asc:after {
   content: "\25B2";
+}
+.tcGrid__scope .tc-grid_blank .tc-style_table .tc-display_tbody .tc-style_tr {
+  color: inherit;
+  text-decoration: none;
 }
 .tcGrid__scope .tc-grid_blank .tc-style_table .tc-display_tbody .tc-style_tr:nth-child(odd) {
   background-color: inherit;
