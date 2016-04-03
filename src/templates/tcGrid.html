@@ -14,7 +14,7 @@
 
         </div>
 
-        <div class="tc-display_pager" ng-show="tcGrid.showFooter && tcGrid.pageCount > 1">
+        <div class="tc-display_pager tc-style_pager" ng-show="tcGrid.showFooter && tcGrid.pageCount > 1">
             <div class="tc-display_item-total">
                 {{(tcGrid.options.paging.currentPage - 1) * tcGrid.options.paging.pageSize + 1}}
                 -
@@ -24,7 +24,7 @@
             </div>
             <div class="tc-display_page-nav">
                 <span class="tc-style_page-display">{{tcGrid.options.paging.currentPage}} / {{tcGrid.pageCount}}</span>
-                <select ng-if="tcGrid.options.paging.pageSizeOptions.length" ng-options="pageSize for pageSize in tcGrid.options.paging.pageSizeOptions" ng-model="tcGrid.options.paging.pageSize" ng-change="tcGrid.updatePageSize()"></select>
+                <select class="tc-select" ng-if="tcGrid.options.paging.pageSizeOptions.length" ng-options="pageSize for pageSize in tcGrid.options.paging.pageSizeOptions" ng-model="tcGrid.options.paging.pageSize" ng-change="tcGrid.updatePageSize()"></select>
                 <button class="tc-button" ng-click="tcGrid.first()" ng-disabled="tcGrid.options.paging.currentPage === 1"><strong>|</strong>&#9668;</button>
                 <button class="tc-button" ng-click="tcGrid.prev()" ng-disabled="tcGrid.options.paging.currentPage === 1">&#9668;</button>
                 <button class="tc-button" ng-click="tcGrid.next()" ng-disabled="tcGrid.options.paging.currentPage === tcGrid.pageCount">&#9658;</button>

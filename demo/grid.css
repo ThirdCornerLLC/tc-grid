@@ -1,0 +1,54 @@
+.grid {
+    background: white;
+    border-radius: 2px;
+    box-shadow: 0 2px 2px rgba(0,0,0,0.24), 0 0 2px 0 rgba(0,0,0,0.12);
+}
+
+.grid .tc-style_thead {
+
+}
+
+.grid .tc-style_tbody {
+
+}
+
+.grid .tc-style_tr {
+    text-decoration: none;
+    color: rgba(0,0,0,0.87);
+}
+
+.grid .tc-style_tbody .tc-style_tr:hover {
+    background-color: #F5F5F5;
+}
+
+.grid .tc-style_th {
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: 0.875rem;
+    padding: 8px 12px;
+    border-bottom: 1px solid rgba(156, 163, 178, 0.5);
+}
+
+.grid .tc-style_td {
+    padding: 8px 12px;
+    border-bottom: 1px solid rgba(156, 163, 178, 0.5);
+}
+
+.grid .tc-style_pager {
+    padding: 8px 12px;
+}
+
+.grid .tc-button {
+    border-radius: 2px;
+    padding: 4px 8px;
+}
+
+.grid .tc-button[disabled] {
+    pointer-events: none;
+}
+
+.grid .tc-select {
+    padding: 4px 6px;
+    border: 1px solid rgba(156, 163, 178, 0.5);
+    margin: 0 12px;
+}

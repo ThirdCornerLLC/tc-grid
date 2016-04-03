@@ -3,17 +3,17 @@
 }
 .tcGrid__scope .tc-grid .tc-style_table {
   margin-bottom: 0;
-  border-bottom: 1px solid #dddddd;
+  border-bottom: 1px solid #ddd;
 }
 .tcGrid__scope .tc-grid .tc-style_table .tc-display_thead .tc-style_tr {
-  background-color: #fdfdfd;
+  background-color: #FDFDFD;
 }
 .tcGrid__scope .tc-grid .tc-style_table .tc-display_thead .tc-style_th {
   font-weight: bold;
   vertical-align: bottom;
-  border-top: 1px solid #dddddd;
-  border-left: 1px solid #dddddd;
-  border-bottom: 1px solid #dddddd;
+  border-top: 1px solid #ddd;
+  border-left: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
   padding: 5px;
 }
 .tcGrid__scope .tc-grid .tc-style_table .tc-display_thead .tc-style_th[ng-click] {
@@ -26,7 +26,7 @@
   background: transparent;
 }
 .tcGrid__scope .tc-grid .tc-style_table .tc-display_thead .tc-style_th:last-child {
-  border-right: 1px solid #dddddd;
+  border-right: 1px solid #ddd;
 }
 .tcGrid__scope .tc-grid .tc-style_table .tc-display_thead .tc-style_sort:after {
   margin-left: 5px;
@@ -45,42 +45,36 @@
   background-color: #f5f5f5;
 }
 .tcGrid__scope .tc-grid .tc-style_table .tc-display_tbody .tc-style_tr:nth-child(even) {
-  background-color: #fdfdfd;
+  background-color: #FDFDFD;
 }
 .tcGrid__scope .tc-grid .tc-style_table .tc-display_tbody .tc-style_tr[ng-click]:hover {
   background-color: #f0f0f0;
+}
+.tcGrid__scope .tc-grid .tc-style_table .tc-display_tbody .tc-display_tr:first-child {
+  border-top: 1px solid #ddd;
 }
 .tcGrid__scope .tc-grid .tc-style_table .tc-display_tbody .tc-display_tr .tc-mobile-header {
   padding-right: 5px;
   font-weight: bold;
 }
 .tcGrid__scope .tc-grid .tc-style_table .tc-display_tbody .tc-display_tr .tc-style_td {
-  border-left: 1px solid #dddddd;
+  border-left: 1px solid #ddd;
   border-top: none;
+  border-right: 1px solid #ddd;
   padding: 5px;
 }
-@media screen and (min-width: 769px) {
+@media screen and (min-width: 768px) {
   .tcGrid__scope .tc-grid .tc-style_table .tc-display_tbody .tc-display_tr .tc-style_td:last-child {
-    border-right: 1px solid #dddddd;
+    border-right: 1px solid #ddd;
   }
 }
-@media screen and (max-width: 768px) {
-  .tcGrid__scope .tc-grid .tc-style_table .tc-display_tbody .tc-display_tr .tc-style_td {
-    border-right: 1px solid #dddddd;
-  }
-}
-@media screen and (min-width: 769px) {
+@media screen and (min-width: 768px) {
   .tcGrid__scope .tc-grid .tc-style_table .tc-display_tbody .tc-display_tr:first-child {
     border-top: none;
   }
 }
-@media screen and (max-width: 768px) {
-  .tcGrid__scope .tc-grid .tc-style_table .tc-display_tbody .tc-display_tr:first-child {
-    border-top: 1px solid #dddddd;
-  }
-}
 .tcGrid__scope .tc-grid .tc-display_pager {
-  background-color: #dddddd;
+  background-color: #ddd;
   padding: 5px;
   margin-top: 0;
 }
@@ -95,14 +89,14 @@
   border-bottom: 0;
 }
 .tcGrid__scope .tc-grid_bootstrap .tc-style_table .tc-display_thead .tc-style_tr {
-  background-color: #ffffff;
+  background-color: #FFF;
 }
 .tcGrid__scope .tc-grid_bootstrap .tc-style_table .tc-display_thead .tc-style_th {
   font-weight: bold;
   vertical-align: bottom;
   border-top: 0;
   border-left: 0;
-  border-bottom: 2px solid #dddddd;
+  border-bottom: 2px solid #ddd;
   padding: 5px;
 }
 .tcGrid__scope .tc-grid_bootstrap .tc-style_table .tc-display_thead .tc-style_th[ng-click] {
@@ -131,13 +125,16 @@
   text-decoration: none;
 }
 .tcGrid__scope .tc-grid_bootstrap .tc-style_table .tc-display_tbody .tc-style_tr:nth-child(odd) {
-  background-color: #ffffff;
+  background-color: #FFF;
 }
 .tcGrid__scope .tc-grid_bootstrap .tc-style_table .tc-display_tbody .tc-style_tr:nth-child(even) {
-  background-color: #ffffff;
+  background-color: #FFF;
 }
 .tcGrid__scope .tc-grid_bootstrap .tc-style_table .tc-display_tbody .tc-style_tr[ng-click]:hover {
-  background-color: #ffffff;
+  background-color: #FFF;
+}
+.tcGrid__scope .tc-grid_bootstrap .tc-style_table .tc-display_tbody .tc-display_tr:first-child {
+  border-top: 0;
 }
 .tcGrid__scope .tc-grid_bootstrap .tc-style_table .tc-display_tbody .tc-display_tr .tc-mobile-header {
   padding-right: 5px;
@@ -145,31 +142,22 @@
 }
 .tcGrid__scope .tc-grid_bootstrap .tc-style_table .tc-display_tbody .tc-display_tr .tc-style_td {
   border-left: 0;
-  border-top: 1px solid #dddddd;
+  border-top: 1px solid #ddd;
+  border-right: 0;
   padding: 5px;
 }
-@media screen and (min-width: 769px) {
+@media screen and (min-width: 768px) {
   .tcGrid__scope .tc-grid_bootstrap .tc-style_table .tc-display_tbody .tc-display_tr .tc-style_td:last-child {
     border-right: 0;
   }
 }
-@media screen and (max-width: 768px) {
-  .tcGrid__scope .tc-grid_bootstrap .tc-style_table .tc-display_tbody .tc-display_tr .tc-style_td {
-    border-right: 0;
-  }
-}
-@media screen and (min-width: 769px) {
+@media screen and (min-width: 768px) {
   .tcGrid__scope .tc-grid_bootstrap .tc-style_table .tc-display_tbody .tc-display_tr:first-child {
     border-top: none;
   }
 }
-@media screen and (max-width: 768px) {
-  .tcGrid__scope .tc-grid_bootstrap .tc-style_table .tc-display_tbody .tc-display_tr:first-child {
-    border-top: 0;
-  }
-}
 .tcGrid__scope .tc-grid_bootstrap .tc-display_pager {
-  background-color: #ffffff;
+  background-color: #FFF;
   padding: 5px;
   margin-top: 0;
 }
@@ -228,6 +216,9 @@
 .tcGrid__scope .tc-grid_blank .tc-style_table .tc-display_tbody .tc-style_tr[ng-click]:hover {
   background-color: inherit;
 }
+.tcGrid__scope .tc-grid_blank .tc-style_table .tc-display_tbody .tc-display_tr:first-child {
+  border-top: 0;
+}
 .tcGrid__scope .tc-grid_blank .tc-style_table .tc-display_tbody .tc-display_tr .tc-mobile-header {
   padding-right: 5px;
   font-weight: bold;
@@ -235,26 +226,17 @@
 .tcGrid__scope .tc-grid_blank .tc-style_table .tc-display_tbody .tc-display_tr .tc-style_td {
   border-left: 0;
   border-top: 0;
+  border-right: 0;
   padding: 0;
 }
-@media screen and (min-width: 769px) {
+@media screen and (min-width: 768px) {
   .tcGrid__scope .tc-grid_blank .tc-style_table .tc-display_tbody .tc-display_tr .tc-style_td:last-child {
     border-right: 0;
   }
 }
-@media screen and (max-width: 768px) {
-  .tcGrid__scope .tc-grid_blank .tc-style_table .tc-display_tbody .tc-display_tr .tc-style_td {
-    border-right: 0;
-  }
-}
-@media screen and (min-width: 769px) {
+@media screen and (min-width: 768px) {
   .tcGrid__scope .tc-grid_blank .tc-style_table .tc-display_tbody .tc-display_tr:first-child {
     border-top: none;
-  }
-}
-@media screen and (max-width: 768px) {
-  .tcGrid__scope .tc-grid_blank .tc-style_table .tc-display_tbody .tc-display_tr:first-child {
-    border-top: 0;
   }
 }
 .tcGrid__scope .tc-grid_blank .tc-display_pager {
@@ -277,7 +259,25 @@
   right: 5px;
   text-align: right;
 }
-@media screen and (min-width: 769px) {
+.tcGrid__scope .tc-display_table {
+  display: block;
+}
+.tcGrid__scope .tc-display_table .tc-display_thead {
+  display: none;
+}
+.tcGrid__scope .tc-display_table .tc-display_tbody {
+  display: block;
+}
+.tcGrid__scope .tc-display_table .tc-display_tbody .tc-display_tr {
+  display: block;
+}
+.tcGrid__scope .tc-display_table .tc-display_tbody .tc-display_tr .tc-mobile-header {
+  display: inline-block;
+}
+.tcGrid__scope .tc-display_table .tc-display_tbody .tc-display_tr .tc-display_td {
+  display: block;
+}
+@media screen and (min-width: 768px) {
   .tcGrid__scope .tc-display_table {
     display: table;
     width: 100%;
@@ -302,26 +302,6 @@
   }
   .tcGrid__scope .tc-display_table .tc-display_tbody .tc-display_tr .tc-display_td {
     display: table-cell;
-  }
-}
-@media screen and (max-width: 768px) {
-  .tcGrid__scope .tc-display_table {
-    display: block;
-  }
-  .tcGrid__scope .tc-display_table .tc-display_thead {
-    display: none;
-  }
-  .tcGrid__scope .tc-display_table .tc-display_tbody {
-    display: block;
-  }
-  .tcGrid__scope .tc-display_table .tc-display_tbody .tc-display_tr {
-    display: block;
-  }
-  .tcGrid__scope .tc-display_table .tc-display_tbody .tc-display_tr .tc-mobile-header {
-    display: inline-block;
-  }
-  .tcGrid__scope .tc-display_table .tc-display_tbody .tc-display_tr .tc-display_td {
-    display: block;
   }
 }
 .tcGrid__scope .tc-button {
