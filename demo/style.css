@@ -52,7 +52,7 @@ html, body {
     min-width: 2em;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-
+    text-decoration: none;
 }
 
 .button:hover {
