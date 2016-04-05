@@ -56,11 +56,11 @@
 
                         sort = sort.replace(/\s\w*/, '');
 
-                        var data = _(dataOrig).sortBy(sort);
+                        var data = dataOrig.sort(sortBy(sort));
 
                         vm.data = [];
                         $timeout(function() {
-                            vm.data = (descending) ? data.reverse().value() : data.value();
+                            vm.data = (descending) ? data.reverse() : data;
                             vm.data = vm.data.slice((page - 1) * count, page * count);
                         }, loadingTime);
 
@@ -84,9 +84,6 @@
             },
             test: function() {
                 alert("I'm the controller");
-            },
-            shuffleColumns: function() {
-                vm.gridOptions.columnDisplay = _.shuffle(vm.gridOptions.columnDisplay);
             }
         };
 
@@ -100,6 +97,16 @@
             $timeout(function() {
                 vm.data = dataOrig.slice(0, 2);
             }, loadingTime);
+        }
+
+        function sortBy(field) {
+            return function(a, b) {
+                if(!isNaN(a[field]) && !isNaN(b[field])) {
+                    return a[field] - b[field];
+                } else {
+                    return a[field] > b[field] ? 1 : -1;
+                }
+            }
         }
     }
 
