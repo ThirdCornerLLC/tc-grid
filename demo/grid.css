@@ -52,3 +52,23 @@
     border: 1px solid rgba(156, 163, 178, 0.5);
     margin: 0 12px;
 }
+
+.tc-style_th[ng-click] {
+    cursor: pointer;
+}
+
+.tc-style_th[ng-click]:hover {
+    background: #F5F5F5;
+}
+
+.grid .tc-style_sort:after {
+    margin-left: 4px;
+}
+
+.grid .tc-style_sort.desc:after {
+    content: '\25BC';
+}
+
+.grid .tc-style_sort.asc:after {
+    content: '\25B2';
+}

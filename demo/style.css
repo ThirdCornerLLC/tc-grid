@@ -2,7 +2,7 @@ html, body {
     background: #F2F2F2;
     font-size: 16px;
     line-height: 1.8;
-    font-family: sans-serif;
+    font-family: 'Roboto', sans-serif;
     margin: 0;
 }
 
@@ -19,28 +19,43 @@ html, body {
     margin-right: auto;
     background: #0ec0e6;
     box-shadow: 0 2px 2px rgba(0,0,0,0.24), 0 0 2px 0 rgba(0,0,0,0.12);
+    text-align: center;
 }
 
 .hero__title {
-    font-size: 3rem;
+    font-size: 4rem;
     letter-spacing: 0.1em;
     color: white;
     text-align: center;
-    font-weight: normal;
+    font-weight: lighter;
 }
 
-.test-button {
+.hero__button.button {
+    font-size: 1.5em;
+    background: transparent;
+    border-color: white;
+    color: white;
+    transition: 200ms cubic-bezier(.78,.17,.24,1.04);
+}
+
+.hero__button.button:hover {
+    color: rgba(0,0,0,0.87);
+    color: #0ec0e6;
+    background: white;
+}
+
+.button {
     background: white;
     border-radius: 2px;
     border: 1px solid rgba(156, 163, 178, 0.5);
-    padding: 8px 12px;
-    min-width: 36px;
+    padding: 0.5em 0.75em;
+    min-width: 2em;
     text-transform: uppercase;
     letter-spacing: 0.05em;
 
 }
 
-.test-button:hover {
+.button:hover {
     cursor: pointer;
 }
 
