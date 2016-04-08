@@ -1,8 +1,8 @@
 ﻿(function () {
     'use strict';
     angular.module('tc-grid', [])
-        .directive('tcGrid', tcGrid)
-        .directive('tcColumn', tcGridColumn);
+    .directive('tcGrid', tcGrid)
+    .directive('tcColumn', tcGridColumn);
 
     function tcGrid($parse, $compile, $templateCache, $timeout) {
         return {
@@ -62,8 +62,14 @@
                         var mobileHeader = '<div class="tc-mobile-header">' + colName + '</div>';
                         el.prepend(mobileHeader);
                     }
-                    attrs.headerTemplates.push(angular.element(header));
+
+                    var headerEl = angular.element(header);
+
+                    attrs.headerTemplates.push(headerEl);
                     attrs.colTemplates.push(el.clone());
+
+                    el = null;
+                    headerEl = null;
                 });
 
                 var templateHtml = $templateCache.get('tcGrid.html');
@@ -92,6 +98,10 @@
 
                 element.html('');
                 element.append(template);
+                template = null;
+                row = null;
+                rows = null;
+                children = null;
 
                 return {
                     pre: () => {},
@@ -110,6 +120,10 @@
                 vm.columnTemplates = $attrs.colTemplates;
                 vm.headerTemplates = $attrs.headerTemplates;
                 vm.rowTemplate = $attrs.rowTemplate;
+
+                $attrs.colTemplates = null;
+                $attrs.headerTemplates = null;
+                $attrs.rowTemplate = null;
 
                 vm.addColumn = addColumn;
                 vm.prev = prev;
@@ -176,6 +190,7 @@
                     var table = getTable();
                     updateHead(table, columnOrder);
                     updateBody(table, columnOrder);
+                    table = null;
                 }
 
                 function updateBody(table, columnOrder) {
@@ -195,27 +210,33 @@
                             var col = getTemplate(vm.columnTemplates, columnOrder[i]);
                             col.removeAttr("ng-transclude");
                             row.append(col.clone());
+                            col = null;
                         }
                         body.append(row);
                         $compile(body)($scope);
                         table = angular.element(table);
                         table.append(body);
                         $scope.$apply();
+
+                        body = null;
+                        row = null;
+                        table = null;
                     });
                 }
 
                 function updateHead(table, columnOrder) {
                     var head = angular.element(table.thead);
                     var row = angular.element(head.find('div')[0]);
-                    headTimeout = $timeout(function() {
-                        row.html('');
-                        for(var i in columnOrder) {
-                            var col = getTemplate(vm.headerTemplates, columnOrder[i]);
-                            row.append(col.clone());
-                        }
-                        $compile(head)($scope);
-                        initSort();
-                    });
+                    row.html('');
+                    for(var i in columnOrder) {
+                        var col = getTemplate(vm.headerTemplates, columnOrder[i]);
+                        row.append(col.clone());
+                        col = null;
+                    }
+                    $compile(head)($scope);
+                    row = null;
+                    head = null;
+                    initSort();
                 }
 
                 function getTemplate(templates, identifier) {
@@ -247,6 +268,8 @@
                     table.tbody = tbody;
                     table.thead = thead;
 
+                    tbody = null;
+                    thead = null;
                     return table;
                 }
 
@@ -348,6 +371,7 @@
                         var column = fetchColumn(col);
                         if(column) {
                             column.addClass(dir.toLowerCase());
+                            column = null;
                         }
                     });
                 }
@@ -427,6 +451,8 @@
                         vm.options.sorting.sort = [field + ' ' + direction];
 
                         sortChanged();
+
+                        col = null;
                     }
                 }
 
@@ -437,6 +463,7 @@
                             if(colElement) {
                                 colElement.removeClass('desc');
                                 colElement.removeClass('asc');
+                                colElement = null;
                             }
                         }
                     });

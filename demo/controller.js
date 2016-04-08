@@ -5,7 +5,7 @@
     app.controller('MyController', ['$scope', '$timeout', MyController]);
 
     function MyController($scope, $timeout) {
-        var loadingTime = 0;
+        var loadingTime = 1000;
 
         var dataOrig =  [
             {
@@ -84,7 +84,8 @@
             },
             test: function() {
                 alert("I'm the controller");
-            }
+            },
+            sorter: sorter
         };
 
         init();
@@ -97,6 +98,12 @@
             $timeout(function() {
                 vm.data = dataOrig.slice(0, 2);
             }, loadingTime);
+        }
+
+        function sorter() {
+            for(let i = 0; i < 100000; i++) {
+                vm.gridOptions.sort();
+            }
         }
 
         function sortBy(field) {
