@@ -235,10 +235,13 @@
                             return templates[i];
                         }
                     }
+
+                    console.log(templates, identifier);
                 }
 
                 function getTable() {
-                    var table = document.getElementsByClassName('tc-display_table')[0];
+                    //TODO: refactor to not be shitty
+                    var table = $element.children().children().children()[0];
                     var tableChildren = Array.prototype.slice.call(table.children);
                     var thead, tbody, node;
 
@@ -349,7 +352,7 @@
                 }
 
                 function initSort() {
-                    if(!vm.options.sorting.sort) return;
+                    if(!vm.options || !vm.options.sorting.sort) return;
 
                     angular.forEach(vm.options.sorting.sort, (sortItem) => {
                         var col = sortItem.split(' ')[0];
