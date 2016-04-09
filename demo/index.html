@@ -21,9 +21,9 @@
 			<div class="container">
 				<div class="container__grid">
 					<tc-grid tc-data="vm.data" tc-grid-class="grid" tc-options="vm.gridOptions" tc-row-link="http://google.com">
-						<tc-column tc-field="Id" tc-visible="vm.show.Id"></tc-column>
-						<tc-column tc-field="Name" tc-visible="vm.show.Name"></tc-column>
-						<tc-column tc-field="Email" tc-visible="vm.show.Email"></tc-column>
+						<tc-column tc-field="Id" tc-visible="vm.show.Id">{{row.Id}}</tc-column>
+						<tc-column tc-field="Name" tc-visible="vm.show.Name">{{row.Name}}</tc-column>
+						<tc-column tc-field="Email" tc-visible="vm.show.Email">{{row.Email}}</tc-column>
 						<tc-column tc-name="Status">{{row.Status}}</tc-column>
 						<tc-column tc-visible="vm.show.Controls"><button class="button" ng-click="vm.test();$event.preventDefault();">Click me</button></tc-column>
 					</tc-grid>

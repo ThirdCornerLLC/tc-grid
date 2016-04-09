@@ -8,107 +8,43 @@
         return {
             restrict: 'E',
             scope: true,
-            compile: (element, attrs) => {
-                var children = element.find('tc-column');
-                var headerHtml = "";
-
-                attrs.columns = {};
-                attrs.colTemplates = [];
-                attrs.headerTemplates = [];
+            priority: 1,
+            compile: function(element, attrs) {
+                let children = element.find('tc-column');
 
                 angular.forEach(children, (child, index) => {
-                    var el = angular.element(child);
-                    var colField = el.attr('tc-field');
-                    var colName = el.attr('tc-name') || colField || '';
-                    var sort = el.attr('tc-sort');
-                    var ignoreClick = el.attr('tc-ignore-click');
-                    var colClass = el.attr('tc-class');
+                    var childClass = child.getAttribute('tc-class');
 
-                    var sortFn = '';
-                    var headerId = '';
-                    var hideFn = '';
-
-                    if (colField) {
-                        sortFn = ' ng-click="tcGrid.sort(\'' + (colField) + '\')"';
-                        headerId = ' id="' + attrs.tcOptions + "_" + colField.replace(/\./g, "") + '"';
-
-                        if(el.html() === '') {
-                            el.html('{{row.' + colField + '}}');
-                        }
-                    }
-
-                    attrs.columns[index] = {
-                        field: colField,
-                        visible: el.attr('tc-visible')
-                    };
-
-                    if (ignoreClick)
-                        el.attr('ng-click', '$event.stopPropagation();');
-
-
-                    el.addClass(colClass || 'tc-style_td');
-                    el.attr('tc-col-index', index + 1);
-
-
-                    if(el.attr('tc-visible')) {
-                        el.attr('ng-class', "{'tc-hide-col': !tcGrid.columns['"+ index +"'].visible}");
-                        hideFn = "ng-class=\"{'tc-hide-col': !tcGrid.columns[\'"+ index +"\'].visible}\"";
-                    }
-
-                    var header = '<div class="tc-display_th tc-style_th" tc-col-index="'+ (index + 1) +'"' + headerId + sortFn + hideFn + '>' + colName + '<span class="tc-display_sort tc-style_sort"></span></div>';
-                    headerHtml += header;
-
-                    if(colName) {
-                        var mobileHeader = '<div class="tc-mobile-header">' + colName + '</div>';
-                        el.prepend(mobileHeader);
-                    }
-
-                    var headerEl = angular.element(header);
-
-                    attrs.headerTemplates.push(headerEl);
-                    attrs.colTemplates.push(el.clone());
-
-                    el = null;
-                    headerEl = null;
+                    child.setAttribute('data-identifier', Math.random());
+                    child.setAttribute('tc-col-index', index + 1);
+                    child.className += " " + (childClass || 'tc-style_td');
                 });
 
                 var templateHtml = $templateCache.get('tcGrid.html');
-                templateHtml = templateHtml.replace(/%OPTIONS%/g, attrs.tcOptions);
-                templateHtml = templateHtml.replace(/%HEADER%/g, headerHtml);
                 templateHtml = templateHtml.replace(/%GRIDCLASS%/g, attrs.tcGridClass || 'tc-grid');
+                templateHtml = templateHtml.replace(/%ROWCLASS%/g, attrs.tcRowClass ? '' : 'tc-style_tr');
+                templateHtml = templateHtml.replace(/%ROWEXPRESSION%/g, attrs.tcRowClass || '');
                 templateHtml = templateHtml.replace(/%ROWCLICK%/g, attrs.tcRowClick ? 'ng-click="' + attrs.tcRowClick + '"' : "");
                 templateHtml = templateHtml.replace(/%ROWLINK%/g, attrs.tcRowLink ? ' ng-href="' + attrs.tcRowLink + '"' : "");
                 templateHtml = templateHtml.replace(/%FILTER%/g, attrs.tcGridFilter ? ' | filter: ' + attrs.tcGridFilter : "");
-                templateHtml = templateHtml.replace(/%ROWCLASS%/g, attrs.tcRowClass ? '' : 'tc-style_tr');
-                templateHtml = templateHtml.replace(/%ROWEXPRESSION%/g, attrs.tcRowClass || '');
-                templateHtml = templateHtml.replace(/%CHILDREN%/g, children.parent().html());
 
                 var template = angular.element(templateHtml);
-                var rows = template.find('a');
-                var row;
-                for(var item in rows) {
-                    if(rows[item].id == "tc-row-container") {
-                        row = rows[item];
-                        break;
-                    }
-                }
-
+                var row = template[0].querySelector('.tc-display_tbody .tc-display_tr');
                 attrs.rowTemplate = angular.element(row);
-                attrs.rowTemplate.html("");
+                attrs.rowTemplate.append(children);
+                row = null;
 
                 element.html('');
                 element.append(template);
+
                 template = null;
-                row = null;
-                rows = null;
-                children = null;
 
                 return {
                     pre: () => {},
                     post: () => {}
-                };
+                }
             },
-            controller: function($scope, $element, $attrs) {
+            controller: function tcGridController($scope, $element, $attrs) {
                 var watchInitialized = false;
                 var headTimeout;
                 var bodyTimeout;
@@ -117,12 +53,10 @@
                 vm.pageCount = 1;
                 vm.showFooter = false;
                 vm.columns = [];
-                vm.columnTemplates = $attrs.colTemplates;
-                vm.headerTemplates = $attrs.headerTemplates;
+                vm.columnTemplates = [];
+                vm.headerTemplates = [];
                 vm.rowTemplate = $attrs.rowTemplate;
 
-                $attrs.colTemplates = null;
-                $attrs.headerTemplates = null;
                 $attrs.rowTemplate = null;
 
                 vm.addColumn = addColumn;
@@ -133,6 +67,7 @@
                 vm.sort = sort;
                 vm.updatePageSize = updatePageSize;
                 vm.orderColumns = orderColumns;
+                vm.registerColumn = registerColumn;
 
                 init();
 
@@ -186,42 +121,91 @@
                     }
                 }
 
-                function orderColumns(columnOrder) {
-                    var table = getTable();
-                    updateHead(table, columnOrder);
-                    updateBody(table, columnOrder);
-                    table = null;
+                function registerColumn(element, options) {
+                    if(hasColumn(options)) return;
+
+                    var sortFn;
+                    var headerId;
+                    var hideFn;
+
+                    options.tcField = options.tcField || "";
+                    options.tcName = options.tcName || options.tcField || "";
+
+                    var index = vm.headerTemplates.length;
+                    if(options.tcField) {
+                        sortFn = ' ng-click="tcGrid.sort(\'' + (options.tcField) + '\')"';
+                        headerId = ' id="' + $attrs.tcOptions + "_" + options.tcField.replace(/\./g, "") + '"';
+                    } else {
+                        sortFn = '';
+                        headerId = '';
+                    }
+
+                    hideFn = "ng-class=\"{'tc-hide-col': !tcGrid.columns[\'"+ index +"\'].visible}\"";
+
+                    var header = '<div class="tc-display_th tc-style_th" tc-col-index="' + (index + 1) + '"' + headerId + sortFn + hideFn + '>' + options.tcName + '<span class="tc-display_sort tc-style_sort"></span></div>';
+                    var headerEl = angular.element(header);
+                    vm.headerTemplates.push(headerEl);
+                    vm.columnTemplates.push(element.clone());
+
+                    element = null;
+                    headerEl = null;
+
+                    addColumn(options);
+                    orderColumns();
                 }
 
+                function hasColumn(options) {
+                    for(var i = 0; i < vm.columns.length; i++) {
+                        if(vm.columns[i].identifier === options.identifier) {
+                            return true;
+                        }
+                    }
+
+                    return false;
+                }
+
+                function orderColumns(columnOrder) {
+                    if(!columnOrder) {
+                        var columnOrder = [];
+                        for(var i = 0; i < vm.columns.length; i++) {
+                            columnOrder.push(i+1);
+                        }
+                    }
+
+                    if(vm.columns.length) {
+                        var table = getTable();
+                        updateHead(table, columnOrder);
+                        //updateBody(table, columnOrder);
+                        table = null;
+                    }
+                }
+
+                //TODO: fix body
                 function updateBody(table, columnOrder) {
                     var body = angular.element('<div class="tc-display_tbody tc-style_tbody"></div>');
                     var row = angular.element(vm.rowTemplate);
 
-                    bodyTimeout = $timeout(function() {
-                        if(table.tbody && table.tbody.parentNode) {
-                            table.tbody.parentNode.removeChild(table.tbody);
-                        } else {
-                            return;
-                        }
+                    if(table.tbody && table.tbody.parentNode) {
+                        table.tbody.parentNode.removeChild(table.tbody);
+                    }
 
-                        row.html("");
+                    row.html("");
 
-                        for(var i in columnOrder) {
-                            var col = getTemplate(vm.columnTemplates, columnOrder[i]);
-                            col.removeAttr("ng-transclude");
-                            row.append(col.clone());
-                            col = null;
-                        }
-                        body.append(row);
-                        $compile(body)($scope);
-                        table = angular.element(table);
-                        table.append(body);
-                        $scope.$apply();
+                    for(var i in columnOrder) {
+                        var col = getTemplate(vm.columnTemplates, columnOrder[i]);
+                        col.removeAttr("ng-transclude");
+                        row.append(col.clone());
+                        col = null;
+                    }
 
-                        body = null;
-                        row = null;
-                        table = null;
-                    });
+                    body.append(row);
+                    $compile(body)($scope);
+                    table = angular.element(table);
+                    table.append(body);
+
+                    body = null;
+                    row = null;
+                    table = null;
                 }
 
                 function updateHead(table, columnOrder) {
@@ -233,9 +217,11 @@
                         row.append(col.clone());
                         col = null;
                     }
+
                     $compile(head)($scope);
                     row = null;
                     head = null;
+
                     initSort();
                 }
 
@@ -487,9 +473,12 @@
                     return null;
                 }
 
-                function addColumn(name) {
-                    if(vm.columns.indexOf(name) == -1)
-                        vm.columns.push(name);
+                function addColumn(options) {
+                    vm.columns.push({
+                        field: options.tcField,
+                        identifier: options.identifier,
+                        visible: true
+                    });
                 }
 
                 function updatePageSize() {
@@ -512,10 +501,19 @@
     function tcGridColumn() {
         return {
             restrict: 'E',
-            require: '^tcGrid',
+            require: '^?tcGrid',
             replace: true,
             transclude: true,
-            template: "<div class='tc-display_td' ng-transclude></div>"
+            template: "<div class='tc-display_td' ng-transclude></div>",
+            compile: function(element, attrs) {
+                return {
+                    pre: (scope, element, attrs, ctrl) => {
+                        if(ctrl) {
+                            ctrl.registerColumn(element, attrs);
+                        }
+                    }
+                }
+            }
         };
     }
 
