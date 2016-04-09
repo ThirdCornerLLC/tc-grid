@@ -12,12 +12,23 @@
             compile: function(element, attrs) {
                 let children = element.find('tc-column');
 
+                attrs.defaultHeaders = [];
+
                 angular.forEach(children, (child, index) => {
                     var childClass = child.getAttribute('tc-class');
 
                     child.setAttribute('data-identifier', Math.random());
                     child.setAttribute('tc-col-index', index + 1);
                     child.className += " " + (childClass || 'tc-style_td');
+
+                    attrs.defaultHeaders.push({
+                        element,
+                        options: {
+                            tcName: child.getAttribute('tc-name'),
+                            tcField: child.getAttribute('tc-field'),
+                            identifier: child.getAttribute('data-identifier')
+                        }
+                    });
                 });
 
                 var templateHtml = $templateCache.get('tcGrid.html');
@@ -105,19 +116,10 @@
                 }
 
                 function initColumns() {
-                    for(var idx in $attrs.columns) {
-                        if($attrs.columns[idx].visible) {
-                            watchColumn(idx, $attrs.columns[idx].visible);
-                            vm.columns[idx] = {
-                                field: $attrs.columns[idx].field,
-                                visible: $parse($attrs.columns[idx].visible)($scope.$parent)
-                            }
-                        } else {
-                            vm.columns[idx] = {
-                                field: $attrs.columns[idx].field,
-                                visible: true
-                            }
-                        }
+                    for(var i in $attrs.defaultHeaders) {
+                        registerColumn($attrs.defaultHeaders[i].element, $attrs.defaultHeaders[i].options);
+                        $attrs.defaultHeaders[i].element = null;
+                        $attrs.defaultHeaders[i] = null;
                     }
                 }
 
@@ -129,7 +131,7 @@
                     var hideFn;
 
                     options.tcField = options.tcField || "";
-                    options.tcName = options.tcName || options.tcField || "";
+                    options.tcName = options.tcName || options.tcField;
 
                     var index = vm.headerTemplates.length;
                     if(options.tcField) {
@@ -140,7 +142,7 @@
                         headerId = '';
                     }
 
-                    hideFn = "ng-class=\"{'tc-hide-col': !tcGrid.columns[\'"+ index +"\'].visible}\"";
+                    hideFn = " ng-class=\"{'tc-hide-col': !tcGrid.columns[\'"+ index +"\'].visible}\"";
 
                     var header = '<div class="tc-display_th tc-style_th" tc-col-index="' + (index + 1) + '"' + headerId + sortFn + hideFn + '>' + options.tcName + '<span class="tc-display_sort tc-style_sort"></span></div>';
                     var headerEl = angular.element(header);
