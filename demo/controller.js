@@ -5,7 +5,7 @@
     app.controller('MyController', ['$scope', '$timeout', MyController]);
 
     function MyController($scope, $timeout) {
-        var loadingTime = 1000;
+        var loadingTime = 250;
 
         var dataOrig =  [
             {

@@ -109,10 +109,10 @@
                 }
 
                 function initColumns() {
-                    for (var i in $attrs.defaultHeaders) {
-                        registerColumn($attrs.defaultHeaders[i].element, $attrs.defaultHeaders[i].options);
-                        $attrs.defaultHeaders[i].element = null;
-                        $attrs.defaultHeaders[i] = null;
+                    var header;
+                    while ((header = $attrs.defaultHeaders.shift()) != null) {
+                        registerColumn(header.element, header.options);
+                        header.element = null;
                     }
                 }
 
