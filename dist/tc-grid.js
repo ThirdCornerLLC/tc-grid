@@ -8,7 +8,6 @@
         return {
             restrict: "E",
             scope: true,
-            priority: 1,
             compile: function compile(element, attrs) {
                 var children = element.find("tc-column");
 
