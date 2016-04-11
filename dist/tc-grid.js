@@ -233,7 +233,7 @@
                 }
 
                 function getTable() {
-                    //TODO: refactor to not be shitty
+                    //TODO: refactor
                     var table = $element.children().children().children()[0];
                     var tableChildren = Array.prototype.slice.call(table.children);
                     var thead, tbody, node;
