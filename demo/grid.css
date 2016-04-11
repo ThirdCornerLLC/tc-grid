@@ -15,6 +15,8 @@
 .grid .tc-style_tr {
     text-decoration: none;
     color: rgba(0,0,0,0.87);
+    border-bottom: 1px solid rgba(156, 163, 178, 0.5);
+    padding-bottom: 6px;
 }
 
 .grid .tc-style_tbody .tc-style_tr:hover {
@@ -26,12 +28,10 @@
     letter-spacing: 0.1em;
     font-size: 0.875rem;
     padding: 8px 12px;
-    border-bottom: 1px solid rgba(156, 163, 178, 0.5);
 }
 
 .grid .tc-style_td {
-    padding: 8px 12px;
-    border-bottom: 1px solid rgba(156, 163, 178, 0.5);
+    padding-left: 4px;
 }
 
 .grid .tc-style_pager {
@@ -67,8 +67,45 @@
 
 .grid .tc-style_sort.desc:after {
     content: '\25BC';
+    float: right;
 }
 
 .grid .tc-style_sort.asc:after {
     content: '\25B2';
+    float: right;
+}
+
+@media screen and (min-width: 768px) {
+    .grid .tc-style_th {
+        border-bottom: 1px solid rgba(156, 163, 178, 0.5);
+    }
+
+    .grid .tc-style_td {
+        padding: 8px 12px;
+        border-bottom: 1px solid rgba(156, 163, 178, 0.5);
+    }
+
+    .grid .tc-style_tr {
+        padding: 0;
+    }
+
+    .grid [tc-col-index="1"] {
+        width: 5%;
+    }
+
+    .grid [tc-col-index="2"] {
+        width: 25%;
+    }
+
+    .grid [tc-col-index="3"] {
+        width: 30%;
+    }
+
+    .grid [tc-col-index="4"] {
+        width: 15%;
+    }
+
+    .grid [tc-col-index="5"] {
+        width: 15%;
+    }
 }

@@ -4,12 +4,26 @@ html, body {
     line-height: 1.8;
     font-family: 'Roboto', sans-serif;
     margin: 0;
+    color: rgba(0,0,0,0.87);
+}
+
+h1,h2,h3,h4,h5,h6 {
+    font-size: 1em;
+    margin: 0;
+    padding: 0;
+}
+
+p {
+    margin: 0;
 }
 
 .container {
     margin-top: 2rem;
-    margin-left: 0.5rem;
-    margin-right: 0.5rem;
+}
+
+.container__grid {
+    margin-left: 0.5em;
+    margin-right: 0.5em;
 }
 
 .hero {
@@ -59,10 +73,43 @@ html, body {
     cursor: pointer;
 }
 
+.section {
+    margin-top: 2em;
+}
+
+.section__title {
+    letter-spacing: 0.05em;
+    margin-bottom: 0.5em;
+    font-size: 1.5em;
+    border-bottom: 1px solid rgba(156,163, 178, 0.5);
+}
+
+.section__description {
+    background: #E2E2E2;
+    border-radius: 2px;
+    vertical-align: top;
+}
+
+@media screen and (min-width: 768px) {
+    .section__grid {
+        display: inline-block;
+        width: calc(80% - 1.5em);
+        padding-left: 0.5em;
+        padding-right: 0.5em;
+    }
+
+    .section__description {
+        display: inline-block;
+        width: calc(20% - 2em);
+        padding: 0.5em 1em;
+    }
+}
+
 @media screen and (min-width: 960px) {
     .container {
-        margin-left: 3rem;
-        margin-right: 3rem;
+        margin-left: 24rem;
+        margin-right: 24rem;
+        margin-bottom: 4rem;
     }
 }
 
