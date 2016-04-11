@@ -40,6 +40,11 @@
 				<p>tc-name adds a name field to a column. It will also parse any html markup in the header
 					allowing input fields and angular expressions.</p>
 			</div>
+			<!--<div class="section__markup">-->
+				<!--&lt;tc-grid tc-data="vm.data" tc-grid-class="grid"&gt;-->
+					<!--&nbsp;&lt;tc-column tc-name="Name"&gt;{{row.Name}}&lt;/tc-column&gt;-->
+				<!--&lt;/tc-grid&gt;-->
+			<!--</div>-->
 		</section>
 
 		<section class="section section--tc-field">
@@ -51,10 +56,10 @@
 			<div class="section__description">
 				<h1 class="section__title">tc-field</h1>
 				<p>tc-field is similar to tc-name, but will trigger sorting on the field given.
-				for example, if tc-field="Name" when clicking the header, onSortChange will be called with
-				["Name asc"] or ["Name desc"]
-				<br/>
-				<small>*Requires sort function</small></p>
+					for example, if tc-field="Name" when clicking the header, onSortChange will be called with
+					["Name asc"] or ["Name desc"]
+					<br/>
+					<small>*Requires sort function</small></p>
 			</div>
 		</section>
 
@@ -67,7 +72,7 @@
 			<div class="section__description">
 				<h1 class="section__title">tc-data</h1>
 				<p>tc-data is the array of data to pass into the grid. Any time this data is
-				modified the grid is updated.</p>
+					modified the grid is updated.</p>
 			</div>
 		</section>
 	</div>
