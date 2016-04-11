@@ -235,8 +235,6 @@
                             return templates[i];
                         }
                     }
-
-                    console.log(templates, identifier);
                 }
 
                 function getTable() {
