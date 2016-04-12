@@ -5,7 +5,9 @@
                 <div class="tc-display_tr tc-style_tr"></div>
             </div>
             <div class="tc-display_tbody tc-style_tbody">
-                <a class="tc-display_tr %ROWCLASS%" ng-class="%ROWEXPRESSION%" id="tc-row-container" ng-repeat="row in tcGrid.data %FILTER%" %ROWCLICK% %ROWLINK%></a>
+                <a class="tc-display_tr %ROWCLASS%" ng-class="%ROWEXPRESSION%" id="tc-row-container" ng-repeat="row in tcGrid.data %FILTER%" %ROWCLICK% %ROWLINK%>
+                    %CHILDREN%
+                </a>
             </div>
 
         </div>

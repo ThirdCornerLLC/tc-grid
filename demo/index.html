@@ -75,6 +75,20 @@
 					modified the grid is updated.</p>
 			</div>
 		</section>
+
+		<section class="section section--tc-data">
+			<div class="section__grid">
+				<tc-grid tc-data="vm.data" tc-grid-class="grid" tc-row-click="vm.test()">
+					<tc-column tc-name="Name">{{row.Name}}</tc-column>
+					<tc-column tc-name="No Click" tc-ignore-click="true">Nothing happens</tc-column>
+				</tc-grid>
+			</div>
+			<div class="section__description">
+				<h1 class="section__title">tc-data</h1>
+				<p>tc-data is the array of data to pass into the grid. Any time this data is
+					modified the grid is updated.</p>
+			</div>
+		</section>
 	</div>
 </div>
 <script src="../bower_components/angular/angular.js"></script>

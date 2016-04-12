@@ -8,8 +8,9 @@
         return {
             restrict: 'E',
             scope: true,
-            compile: function(element, attrs) {
+            template: function(element, attrs) {
                 let children = element.find('tc-column');
+                let childHtml = "";
 
                 attrs.defaultHeaders = [];
 
@@ -28,6 +29,7 @@
                             identifier: child.getAttribute('data-identifier')
                         }
                     });
+                    childHtml += child.outerHTML;
                 });
 
                 var templateHtml = $templateCache.get('tcGrid.html');
@@ -37,22 +39,9 @@
                 templateHtml = templateHtml.replace(/%ROWCLICK%/g, attrs.tcRowClick ? 'ng-click="' + attrs.tcRowClick + '"' : "");
                 templateHtml = templateHtml.replace(/%ROWLINK%/g, attrs.tcRowLink ? ' ng-href="' + attrs.tcRowLink + '"' : "");
                 templateHtml = templateHtml.replace(/%FILTER%/g, attrs.tcGridFilter ? ' | filter: ' + attrs.tcGridFilter : "");
+                templateHtml = templateHtml.replace(/%CHILDREN%/g, childHtml);
 
-                var template = angular.element(templateHtml);
-                var row = template[0].querySelector('.tc-display_tbody .tc-display_tr');
-                attrs.rowTemplate = angular.element(row);
-                attrs.rowTemplate.append(children);
-                row = null;
-
-                element.html('');
-                element.append(template);
-
-                template = null;
-
-                return {
-                    pre: () => {},
-                    post: () => {}
-                }
+                return templateHtml;
             },
             controller: function tcGridController($scope, $element, $attrs) {
                 var watchInitialized = false;
@@ -506,14 +495,33 @@
             require: '^?tcGrid',
             replace: true,
             transclude: true,
-            template: "<div class='tc-display_td' ng-transclude></div>",
+            template(element, attrs) {
+                var template = "<div class='tc-display_td' ng-transclude";
+
+                if(attrs.tcIgnoreClick) {
+                    template += ` ng-click="$event.preventDefault();$event.stopPropagation();"`;
+                }
+
+                template += "></div>";
+
+                return template;
+            },
             compile: function(element, attrs) {
+                if(attrs.tcIgnoreClick) {
+                    element.attr('ng-click', 'test();vm.test()');
+                }
+
                 return {
-                    pre: (scope, element, attrs, ctrl) => {
+                    post: (scope, element, attrs, ctrl) => {
                         if(ctrl) {
                             ctrl.registerColumn(element, attrs);
                         }
                     }
+                }
+            },
+            controller($scope, $element, $attrs) {
+                $scope.test = function() {
+                    console.log('test');
                 }
             }
         };
