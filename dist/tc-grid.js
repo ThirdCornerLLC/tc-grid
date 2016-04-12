@@ -8,8 +8,9 @@
         return {
             restrict: "E",
             scope: true,
-            compile: function compile(element, attrs) {
+            template: function template(element, attrs) {
                 var children = element.find("tc-column");
+                var childHtml = "";
 
                 attrs.defaultHeaders = [];
 
@@ -28,6 +29,7 @@
                             identifier: child.getAttribute("data-identifier")
                         }
                     });
+                    childHtml += child.outerHTML;
                 });
 
                 var templateHtml = $templateCache.get("tcGrid.html");
@@ -37,22 +39,9 @@
                 templateHtml = templateHtml.replace(/%ROWCLICK%/g, attrs.tcRowClick ? "ng-click=\"" + attrs.tcRowClick + "\"" : "");
                 templateHtml = templateHtml.replace(/%ROWLINK%/g, attrs.tcRowLink ? " ng-href=\"" + attrs.tcRowLink + "\"" : "");
                 templateHtml = templateHtml.replace(/%FILTER%/g, attrs.tcGridFilter ? " | filter: " + attrs.tcGridFilter : "");
+                templateHtml = templateHtml.replace(/%CHILDREN%/g, childHtml);
 
-                var template = angular.element(templateHtml);
-                var row = template[0].querySelector(".tc-display_tbody .tc-display_tr");
-                attrs.rowTemplate = angular.element(row);
-                attrs.rowTemplate.append(children);
-                row = null;
-
-                element.html("");
-                element.append(template);
-
-                template = null;
-
-                return {
-                    pre: function () {},
-                    post: function () {}
-                };
+                return templateHtml;
             },
             controller: ["$scope", "$element", "$attrs", function tcGridController($scope, $element, $attrs) {
                 var watchInitialized = false;
@@ -483,17 +472,46 @@
             require: "^?tcGrid",
             replace: true,
             transclude: true,
-            template: "<div class='tc-display_td' ng-transclude></div>",
+            template: (function (_template) {
+                var _templateWrapper = function template(_x, _x2) {
+                    return _template.apply(this, arguments);
+                };
+
+                _templateWrapper.toString = function () {
+                    return _template.toString();
+                };
+
+                return _templateWrapper;
+            })(function (element, attrs) {
+                var template = "<div class='tc-display_td' ng-transclude";
+
+                if (attrs.tcIgnoreClick) {
+                    template += " ng-click=\"$event.preventDefault();$event.stopPropagation();\"";
+                }
+
+                template += "></div>";
+
+                return template;
+            }),
             compile: function compile(element, attrs) {
+                if (attrs.tcIgnoreClick) {
+                    element.attr("ng-click", "test();vm.test()");
+                }
+
                 return {
-                    pre: function (scope, element, attrs, ctrl) {
+                    post: function (scope, element, attrs, ctrl) {
                         if (ctrl) {
                             ctrl.registerColumn(element, attrs);
                         }
                     }
                 };
-            }
+            },
+            controller: ["$scope", "$element", "$attrs", function controller($scope, $element, $attrs) {
+                $scope.test = function () {
+                    console.log("test");
+                };
+            }]
         };
     }
 })();
-angular.module("tc-grid").run(["$templateCache", function($templateCache) {$templateCache.put("tcGrid.html","<div class=\"tcGrid__scope\">\r\n    <div class=\"%GRIDCLASS%\">\r\n        <div class=\"tc-display_table tc-style_table\">\r\n            <div class=\"tc-display_thead tc-style_thead\">\r\n                <div class=\"tc-display_tr tc-style_tr\"></div>\r\n            </div>\r\n            <div class=\"tc-display_tbody tc-style_tbody\">\r\n                <a class=\"tc-display_tr %ROWCLASS%\" ng-class=\"%ROWEXPRESSION%\" id=\"tc-row-container\" ng-repeat=\"row in tcGrid.data %FILTER%\" %ROWCLICK% %ROWLINK%></a>\r\n            </div>\r\n\r\n        </div>\r\n\r\n        <div class=\"tc-display_pager tc-style_pager\" ng-show=\"tcGrid.showFooter && tcGrid.pageCount > 1\">\r\n            <div class=\"tc-display_item-total\">\r\n                {{(tcGrid.options.paging.currentPage - 1) * tcGrid.options.paging.pageSize + 1}}\r\n                -\r\n                {{tcGrid.options.paging.currentPage === tcGrid.pageCount ? tcGrid.options.paging.totalItemCount : tcGrid.options.paging.currentPage * tcGrid.options.paging.pageSize}}\r\n                of\r\n                {{tcGrid.options.paging.totalItemCount}}\r\n            </div>\r\n            <div class=\"tc-display_page-nav\">\r\n                <span class=\"tc-style_page-display\">{{tcGrid.options.paging.currentPage}} / {{tcGrid.pageCount}}</span>\r\n                <select class=\"tc-select\" ng-if=\"tcGrid.options.paging.pageSizeOptions.length\" ng-options=\"pageSize for pageSize in tcGrid.options.paging.pageSizeOptions\" ng-model=\"tcGrid.options.paging.pageSize\" ng-change=\"tcGrid.updatePageSize()\"></select>\r\n                <button class=\"tc-button\" ng-click=\"tcGrid.first()\" ng-disabled=\"tcGrid.options.paging.currentPage === 1\"><strong>|</strong>&#9668;</button>\r\n                <button class=\"tc-button\" ng-click=\"tcGrid.prev()\" ng-disabled=\"tcGrid.options.paging.currentPage === 1\">&#9668;</button>\r\n                <button class=\"tc-button\" ng-click=\"tcGrid.next()\" ng-disabled=\"tcGrid.options.paging.currentPage === tcGrid.pageCount\">&#9658;</button>\r\n                <button class=\"tc-button\" ng-click=\"tcGrid.last()\" ng-disabled=\"tcGrid.options.paging.currentPage === tcGrid.pageCount\">&#9658;<strong>|</strong></button>\r\n            </div>\r\n            <div class=\"clearfix\"></div>\r\n        </div>\r\n    </div>\r\n</div>\r\n\r\n\r\n");}]);
+angular.module("tc-grid").run(["$templateCache", function($templateCache) {$templateCache.put("tcGrid.html","<div class=\"tcGrid__scope\">\r\n    <div class=\"%GRIDCLASS%\">\r\n        <div class=\"tc-display_table tc-style_table\">\r\n            <div class=\"tc-display_thead tc-style_thead\">\r\n                <div class=\"tc-display_tr tc-style_tr\"></div>\r\n            </div>\r\n            <div class=\"tc-display_tbody tc-style_tbody\">\r\n                <a class=\"tc-display_tr %ROWCLASS%\" ng-class=\"%ROWEXPRESSION%\" id=\"tc-row-container\" ng-repeat=\"row in tcGrid.data %FILTER%\" %ROWCLICK% %ROWLINK%>\r\n                    %CHILDREN%\r\n                </a>\r\n            </div>\r\n\r\n        </div>\r\n\r\n        <div class=\"tc-display_pager tc-style_pager\" ng-show=\"tcGrid.showFooter && tcGrid.pageCount > 1\">\r\n            <div class=\"tc-display_item-total\">\r\n                {{(tcGrid.options.paging.currentPage - 1) * tcGrid.options.paging.pageSize + 1}}\r\n                -\r\n                {{tcGrid.options.paging.currentPage === tcGrid.pageCount ? tcGrid.options.paging.totalItemCount : tcGrid.options.paging.currentPage * tcGrid.options.paging.pageSize}}\r\n                of\r\n                {{tcGrid.options.paging.totalItemCount}}\r\n            </div>\r\n            <div class=\"tc-display_page-nav\">\r\n                <span class=\"tc-style_page-display\">{{tcGrid.options.paging.currentPage}} / {{tcGrid.pageCount}}</span>\r\n                <select class=\"tc-select\" ng-if=\"tcGrid.options.paging.pageSizeOptions.length\" ng-options=\"pageSize for pageSize in tcGrid.options.paging.pageSizeOptions\" ng-model=\"tcGrid.options.paging.pageSize\" ng-change=\"tcGrid.updatePageSize()\"></select>\r\n                <button class=\"tc-button\" ng-click=\"tcGrid.first()\" ng-disabled=\"tcGrid.options.paging.currentPage === 1\"><strong>|</strong>&#9668;</button>\r\n                <button class=\"tc-button\" ng-click=\"tcGrid.prev()\" ng-disabled=\"tcGrid.options.paging.currentPage === 1\">&#9668;</button>\r\n                <button class=\"tc-button\" ng-click=\"tcGrid.next()\" ng-disabled=\"tcGrid.options.paging.currentPage === tcGrid.pageCount\">&#9658;</button>\r\n                <button class=\"tc-button\" ng-click=\"tcGrid.last()\" ng-disabled=\"tcGrid.options.paging.currentPage === tcGrid.pageCount\">&#9658;<strong>|</strong></button>\r\n            </div>\r\n            <div class=\"clearfix\"></div>\r\n        </div>\r\n    </div>\r\n</div>\r\n\r\n\r\n");}]);
