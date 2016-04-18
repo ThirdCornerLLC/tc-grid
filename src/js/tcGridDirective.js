@@ -339,7 +339,7 @@
                 }
 
                 function initSort() {
-                    if(!vm.options || !vm.options.sorting.sort) return;
+                    if(!vm.options || !vm.options.sorting || !vm.options.sorting.sort) return;
 
                     angular.forEach(vm.options.sorting.sort, (sortItem) => {
                         var col = sortItem.split(' ')[0];
