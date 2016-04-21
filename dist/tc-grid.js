@@ -321,7 +321,7 @@
                 }
 
                 function initSort() {
-                    if (!vm.options || !vm.options.sorting.sort) {
+                    if (!vm.options || !vm.options.sorting || !vm.options.sorting.sort) {
                         return;
                     }angular.forEach(vm.options.sorting.sort, function (sortItem) {
                         var col = sortItem.split(" ")[0];
