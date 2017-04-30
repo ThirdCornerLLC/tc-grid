@@ -1,15 +1,15 @@
-##tc-grid
+## tc-grid
 A declarative grid for AngularJS
 
-###[Demo](http://thirdcornerllc.github.io/tc-grid/)
+### [Demo](http://thirdcornerllc.github.io/tc-grid/)
 
-##Installation
+## Installation
 
 ```sh
 bower install tc-grid
 ```
 
-##Usage
+## Usage
 
 Basic Usage
 
@@ -85,7 +85,7 @@ function controller($scope) {
 }
 ```
 
-##API
+## API
 #### [grid options](#gridOptions)
  * tc-grid
  * tc-data
