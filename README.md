@@ -245,7 +245,7 @@ Toggle column visibility
   * reset
   	  * sets paging and sorting to page 1 and no sort
 
-##Build
+## Build
 
 navigate to directory
 
